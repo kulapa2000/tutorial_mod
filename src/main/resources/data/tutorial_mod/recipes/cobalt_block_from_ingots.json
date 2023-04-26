@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "###",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "tutorial_mod:cobalt_ingot"
+    }
+  },
+  "result": {
+    "item": "tutorial_mod:cobalt_block"
+  }
+}
