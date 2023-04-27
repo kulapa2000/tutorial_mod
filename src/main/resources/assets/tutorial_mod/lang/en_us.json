@@ -6,5 +6,7 @@
   "itemGroup.creativetab": "Tutorial Mod",
   "item.tutorial_mod.dowsing_rod.no_valuables": "No Valuables Found",
   "item.tutorial_mod.dowsing_rod": "Dowsing Rod",
-  "block.tutorial_mod.speedy_block": "Speedy Block"
+  "block.tutorial_mod.speedy_block": "Speedy Block",
+  "item.tutorial_mod.coal_silver": "Coal Silver",
+  "item.tutorial_mod.turnip": "Turnip"
 }

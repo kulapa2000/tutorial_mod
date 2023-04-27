@@ -1,6 +1,7 @@
 package net.hhc.tutorial.item;
 
 import net.hhc.tutorial.TutorialMod;
+import net.hhc.tutorial.item.custom.CoalSilverItem;
 import net.hhc.tutorial.item.custom.DowsingRodItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -26,5 +27,12 @@ public class ModItems {
 
     public static final RegistryObject<Item> DOWSING_ROD= ITEMS.register("dowsing_rod",
             ()->new DowsingRodItem(new Item.Properties().tab(ModCreativeModeTab.CREATIVE_MODE_TAB)));
+
+    public static final RegistryObject<Item> COAL_SILVER= ITEMS.register("coal_silver",
+            ()->new CoalSilverItem(new Item.Properties().tab(ModCreativeModeTab.CREATIVE_MODE_TAB)));
+
+    public static final RegistryObject<Item> TURNIP= ITEMS.register("turnip",
+            ()->new Item(new Item.Properties().tab(ModCreativeModeTab.CREATIVE_MODE_TAB).food(ModFoods.TURNIP)));
+
 
 }
