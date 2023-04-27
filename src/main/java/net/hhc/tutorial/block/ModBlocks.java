@@ -1,6 +1,7 @@
 package net.hhc.tutorial.block;
 
 import net.hhc.tutorial.TutorialMod;
+import net.hhc.tutorial.block.custom.SpeedyBlock;
 import net.hhc.tutorial.item.ModCreativeModeTab;
 import net.hhc.tutorial.item.ModItems;
 import net.minecraft.world.item.BlockItem;
@@ -41,6 +42,9 @@ public class ModBlocks {
 
     public static final RegistryObject<Block>COBALT_ORE=registerBlock("cobalt_ore",
             ()->new Block(BlockBehaviour.Properties.of(Material.STONE).strength(4f).requiresCorrectToolForDrops()),ModCreativeModeTab.CREATIVE_MODE_TAB);
+
+    public static final RegistryObject<Block>SPEEDY_BLOCK=registerBlock("speedy_block",
+            ()->new SpeedyBlock(BlockBehaviour.Properties.of(Material.STONE).strength(4f).requiresCorrectToolForDrops()),ModCreativeModeTab.CREATIVE_MODE_TAB);
 
 
 
