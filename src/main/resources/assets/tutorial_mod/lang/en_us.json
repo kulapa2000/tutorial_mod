@@ -8,5 +8,8 @@
   "item.tutorial_mod.dowsing_rod": "Dowsing Rod",
   "block.tutorial_mod.speedy_block": "Speedy Block",
   "item.tutorial_mod.coal_silver": "Coal Silver",
-  "item.tutorial_mod.turnip": "Turnip"
+  "item.tutorial_mod.turnip": "Turnip",
+  "tooltip.tutorial_mod.dowsing_rod.tooltip.shift": "Right Click to Find Valuables",
+  "tooltip.tutorial_mod.dowsing_rod.tooltip": "Press Shift for more information",
+  "tooltip.block.speedy_block": "get Speedy"
 }
