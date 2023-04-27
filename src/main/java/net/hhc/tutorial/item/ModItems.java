@@ -1,6 +1,7 @@
 package net.hhc.tutorial.item;
 
 import net.hhc.tutorial.TutorialMod;
+import net.hhc.tutorial.item.custom.DowsingRodItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -23,5 +24,7 @@ public class ModItems {
     public static final RegistryObject<Item> COBALT_NUGGET= ITEMS.register("cobalt_nugget",
             ()->new Item(new Item.Properties().tab(ModCreativeModeTab.CREATIVE_MODE_TAB)));
 
+    public static final RegistryObject<Item> DOWSING_ROD= ITEMS.register("dowsing_rod",
+            ()->new DowsingRodItem(new Item.Properties().tab(ModCreativeModeTab.CREATIVE_MODE_TAB)));
 
 }
