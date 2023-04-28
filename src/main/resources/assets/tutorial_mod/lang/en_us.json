@@ -13,5 +13,7 @@
   "tooltip.tutorial_mod.dowsing_rod.tooltip": "Press Shift for more information",
   "tooltip.block.speedy_block": "get Speedy",
   "block.tutorial_mod.cobalt_stairs": "Cobalt Stairs",
-  "block.tutorial_mod.cobalt_slab": "Cobalt Slab"
+  "block.tutorial_mod.cobalt_slab": "Cobalt Slab",
+  "block.tutorial_mod.cobalt_button": "Cobalt Button",
+  "block.tutorial_mod.cobalt_pressure_plate": "Cobalt Pressure Plate"
 }

@@ -1,0 +1,9 @@
+{
+  "variants": {
+    "powered=false": {
+      "model": "tutorial_mod:block/cobalt_pressure_plate"},
+    "powered=true": {
+      "model": "tutorial_mod:block/cobalt_pressure_plate_down"
+    }
+  }
+}
