@@ -2,6 +2,7 @@ package net.hhc.tutorial.item;
 
 import net.hhc.tutorial.TutorialMod;
 import net.hhc.tutorial.item.custom.CoalSilverItem;
+import net.hhc.tutorial.item.custom.DataTabletItem;
 import net.hhc.tutorial.item.custom.DowsingRodItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -33,6 +34,11 @@ public class ModItems {
 
     public static final RegistryObject<Item> TURNIP= ITEMS.register("turnip",
             ()->new Item(new Item.Properties().tab(ModCreativeModeTab.CREATIVE_MODE_TAB).food(ModFoods.TURNIP)));
+
+    public static final RegistryObject<Item> DATA_TABLET= ITEMS.register("data_tablet",
+            ()->new DataTabletItem(new Item.Properties().tab(ModCreativeModeTab.CREATIVE_MODE_TAB)));
+
+
 
 
 }

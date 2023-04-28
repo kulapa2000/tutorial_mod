@@ -18,5 +18,6 @@
   "block.tutorial_mod.cobalt_pressure_plate": "Cobalt Pressure Plate",
   "block.tutorial_mod.cherry_blossom_door": "Cherry Blossom Door",
   "block.tutorial_mod.cherry_blossom_trapdoor": "Cherry Blossom Trapdoor",
-  "block.tutorial_mod.cobalt_lamp": "Cobalt Lamp"
+  "block.tutorial_mod.cobalt_lamp": "Cobalt Lamp",
+  "item.tutorial_mod.data_tablet": "Data Tablet"
 }
