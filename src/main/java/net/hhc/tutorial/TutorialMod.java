@@ -3,6 +3,8 @@ package net.hhc.tutorial;
 import com.mojang.logging.LogUtils;
 import net.hhc.tutorial.block.ModBlocks;
 import net.hhc.tutorial.item.ModItems;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.MinecraftForge;
@@ -41,6 +43,7 @@ public class TutorialMod
 
 
         eventBus.addListener(this::setup);
+        eventBus.addListener(this::clientSetup);
         // Register the enqueueIMC method for modloading
 
 
@@ -53,6 +56,12 @@ public class TutorialMod
         // some preinit code
         LOGGER.info("HELLO FROM PREINIT");
         LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
+    }
+
+    private void clientSetup(final FMLCommonSetupEvent event)
+    {
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.CHERRY_BLOSSOM_DOOR.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.CHERRY_BLOSSOM_TRAPDOOR.get(), RenderType.cutout());
     }
 
 

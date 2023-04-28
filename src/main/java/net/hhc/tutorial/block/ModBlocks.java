@@ -83,4 +83,10 @@ public class ModBlocks {
     public static final RegistryObject<Block>COBALT_PRESSURE_PLATE=registerBlock("cobalt_pressure_plate",
             ()->new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING,BlockBehaviour.Properties.of(Material.METAL).strength(4f).requiresCorrectToolForDrops()),ModCreativeModeTab.CREATIVE_MODE_TAB);
 
+    public static final RegistryObject<Block>CHERRY_BLOSSOM_DOOR=registerBlock("cherry_blossom_door",
+            ()->new DoorBlock(BlockBehaviour.Properties.of(Material.WOOD).noOcclusion().strength(4f).requiresCorrectToolForDrops()),ModCreativeModeTab.CREATIVE_MODE_TAB);
+
+    public static final RegistryObject<Block>CHERRY_BLOSSOM_TRAPDOOR=registerBlock("cherry_blossom_trapdoor",
+            ()->new TrapDoorBlock(BlockBehaviour.Properties.of(Material.WOOD).noOcclusion().strength(4f).requiresCorrectToolForDrops()),ModCreativeModeTab.CREATIVE_MODE_TAB);
+
 }
