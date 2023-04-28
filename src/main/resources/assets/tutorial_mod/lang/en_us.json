@@ -11,5 +11,7 @@
   "item.tutorial_mod.turnip": "Turnip",
   "tooltip.tutorial_mod.dowsing_rod.tooltip.shift": "Right Click to Find Valuables",
   "tooltip.tutorial_mod.dowsing_rod.tooltip": "Press Shift for more information",
-  "tooltip.block.speedy_block": "get Speedy"
+  "tooltip.block.speedy_block": "get Speedy",
+  "block.tutorial_mod.cobalt_stairs": "Cobalt Stairs",
+  "block.tutorial_mod.cobalt_slab": "Cobalt Slab"
 }
