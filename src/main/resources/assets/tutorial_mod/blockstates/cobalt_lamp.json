@@ -1,0 +1,8 @@
+{
+  "variants":
+  {
+    "clicked=false": {"model": "tutorial_mod:block/cobalt_lamp_off"},
+    "clicked=true": {"model": "tutorial_mod:block/cobalt_lamp_off"}
+  }
+
+}

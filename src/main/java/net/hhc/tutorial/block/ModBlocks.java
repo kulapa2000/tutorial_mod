@@ -1,6 +1,7 @@
 package net.hhc.tutorial.block;
 
 import net.hhc.tutorial.TutorialMod;
+import net.hhc.tutorial.block.custom.CobaltLampBlock;
 import net.hhc.tutorial.block.custom.SpeedyBlock;
 import net.hhc.tutorial.item.ModCreativeModeTab;
 import net.hhc.tutorial.item.ModItems;
@@ -88,5 +89,8 @@ public class ModBlocks {
 
     public static final RegistryObject<Block>CHERRY_BLOSSOM_TRAPDOOR=registerBlock("cherry_blossom_trapdoor",
             ()->new TrapDoorBlock(BlockBehaviour.Properties.of(Material.WOOD).noOcclusion().strength(4f).requiresCorrectToolForDrops()),ModCreativeModeTab.CREATIVE_MODE_TAB);
+
+    public static final RegistryObject<Block>COBALT_LAMP=registerBlock("cobalt_lamp",
+            ()->new CobaltLampBlock(BlockBehaviour.Properties.of(Material.METAL).lightLevel((state)->state.getValue(CobaltLampBlock.CLICKED)? 15:0).strength(4f).requiresCorrectToolForDrops()),ModCreativeModeTab.CREATIVE_MODE_TAB);
 
 }
