@@ -2,7 +2,17 @@
   "parent": "item/generated",
   "textures": {
     "layer0": "tutorial_mod:item/data_tablet_off"
-  }
+  },
+  "overrides": [
+    {
+      "predicate":
+      {
+        "tutorial_mod:on": 1
+      },
+      "model":"tutorial_mod:item/data_tablet_on"
+    }
+
+  ]
 
 
 }

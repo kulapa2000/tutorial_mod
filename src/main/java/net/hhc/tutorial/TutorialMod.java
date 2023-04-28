@@ -3,6 +3,7 @@ package net.hhc.tutorial;
 import com.mojang.logging.LogUtils;
 import net.hhc.tutorial.block.ModBlocks;
 import net.hhc.tutorial.item.ModItems;
+import net.hhc.tutorial.util.ModItemProperties;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.level.block.Block;
@@ -62,6 +63,8 @@ public class TutorialMod
     {
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.CHERRY_BLOSSOM_DOOR.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.CHERRY_BLOSSOM_TRAPDOOR.get(), RenderType.cutout());
+
+        ModItemProperties.addCustomItemProperties();
     }
 
 
