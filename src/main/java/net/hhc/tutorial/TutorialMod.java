@@ -2,6 +2,7 @@ package net.hhc.tutorial;
 
 import com.mojang.logging.LogUtils;
 import net.hhc.tutorial.block.ModBlocks;
+import net.hhc.tutorial.fluid.ModFluids;
 import net.hhc.tutorial.item.ModItems;
 import net.hhc.tutorial.sound.ModSounds;
 import net.hhc.tutorial.util.ModItemProperties;
@@ -43,7 +44,7 @@ public class TutorialMod
         ModItems.register(eventBus);
         ModBlocks.register(eventBus);
         ModSounds.register(eventBus);
-
+        ModFluids.register(eventBus);
 
         eventBus.addListener(this::setup);
         eventBus.addListener(this::clientSetup);
@@ -67,6 +68,10 @@ public class TutorialMod
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.CHERRY_BLOSSOM_TRAPDOOR.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.TURNIP_CROP.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.COBALT_BLASTER.get(), RenderType.cutout());
+
+        ItemBlockRenderTypes.setRenderLayer(ModFluids.HONEY_BLOCK.get(), RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(ModFluids.HONEY_FLUID.get(), RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(ModFluids.HONEY_FLOWING.get(), RenderType.translucent());
 
         ModItemProperties.addCustomItemProperties();
     }
