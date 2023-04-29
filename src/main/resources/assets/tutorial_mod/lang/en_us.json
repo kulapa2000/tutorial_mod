@@ -19,5 +19,8 @@
   "block.tutorial_mod.cherry_blossom_door": "Cherry Blossom Door",
   "block.tutorial_mod.cherry_blossom_trapdoor": "Cherry Blossom Trapdoor",
   "block.tutorial_mod.cobalt_lamp": "Cobalt Lamp",
-  "item.tutorial_mod.data_tablet": "Data Tablet"
+  "item.tutorial_mod.data_tablet": "Data Tablet",
+  "item.tutorial_mod.turnip_seed": "Turnip Seed",
+  "block.tutorial_mod.turnip_crop": "Turnip Crop"
+
 }

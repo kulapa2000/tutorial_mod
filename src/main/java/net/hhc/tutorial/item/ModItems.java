@@ -1,11 +1,13 @@
 package net.hhc.tutorial.item;
 
 import net.hhc.tutorial.TutorialMod;
+import net.hhc.tutorial.block.ModBlocks;
 import net.hhc.tutorial.item.custom.CoalSilverItem;
 import net.hhc.tutorial.item.custom.DataTabletItem;
 import net.hhc.tutorial.item.custom.DowsingRodItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemNameBlockItem;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
@@ -37,6 +39,9 @@ public class ModItems {
 
     public static final RegistryObject<Item> DATA_TABLET= ITEMS.register("data_tablet",
             ()->new DataTabletItem(new Item.Properties().tab(ModCreativeModeTab.CREATIVE_MODE_TAB)));
+
+    public static final RegistryObject<Item> TURNIP_SEEDS= ITEMS.register("turnip_seeds",
+            ()->new ItemNameBlockItem(ModBlocks.TURNIP_CROP.get(),new Item.Properties().tab(ModCreativeModeTab.CREATIVE_MODE_TAB)));
 
 
 

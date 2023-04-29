@@ -3,6 +3,7 @@ package net.hhc.tutorial.block;
 import net.hhc.tutorial.TutorialMod;
 import net.hhc.tutorial.block.custom.CobaltLampBlock;
 import net.hhc.tutorial.block.custom.SpeedyBlock;
+import net.hhc.tutorial.block.custom.TurnipCropBlock;
 import net.hhc.tutorial.item.ModCreativeModeTab;
 import net.hhc.tutorial.item.ModItems;
 import net.minecraft.network.chat.Component;
@@ -92,5 +93,8 @@ public class ModBlocks {
 
     public static final RegistryObject<Block>COBALT_LAMP=registerBlock("cobalt_lamp",
             ()->new CobaltLampBlock(BlockBehaviour.Properties.of(Material.METAL).lightLevel((state)->state.getValue(CobaltLampBlock.CLICKED)? 15:0).strength(4f).requiresCorrectToolForDrops()),ModCreativeModeTab.CREATIVE_MODE_TAB);
+
+    public static final RegistryObject<Block>TURNIP_CROP=BLOCKS.register("turnip_crop",
+            ()->new TurnipCropBlock(BlockBehaviour.Properties.copy(Blocks.BEETROOTS).noOcclusion().noCollission()));
 
 }
