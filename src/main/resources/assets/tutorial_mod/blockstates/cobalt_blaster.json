@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "tutorial_mod:block/cobalt_blaster" },
+    "facing=east": { "model": "tutorial_mod:block/cobalt_blaster", "y": 90 },
+    "facing=south": { "model": "tutorial_mod:block/cobalt_blaster", "y": 180 },
+    "facing=west": { "model": "tutorial_mod:block/cobalt_blaster", "y": 270 }
+  }
+}

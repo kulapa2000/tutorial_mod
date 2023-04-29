@@ -1,6 +1,7 @@
 package net.hhc.tutorial.block;
 
 import net.hhc.tutorial.TutorialMod;
+import net.hhc.tutorial.block.custom.CobaltBlasterBlock;
 import net.hhc.tutorial.block.custom.CobaltLampBlock;
 import net.hhc.tutorial.block.custom.SpeedyBlock;
 import net.hhc.tutorial.block.custom.TurnipCropBlock;
@@ -97,5 +98,8 @@ public class ModBlocks {
 
     public static final RegistryObject<Block>TURNIP_CROP=BLOCKS.register("turnip_crop",
             ()->new TurnipCropBlock(BlockBehaviour.Properties.copy(Blocks.BEETROOTS).noOcclusion().noCollission()));
+
+    public static final RegistryObject<Block>COBALT_BLASTER=registerBlock("cobalt_blaster",
+            ()->new CobaltBlasterBlock(BlockBehaviour.Properties.of(Material.METAL).noOcclusion().strength(5f).requiresCorrectToolForDrops()), ModCreativeModeTab.CREATIVE_MODE_TAB);
 
 }
