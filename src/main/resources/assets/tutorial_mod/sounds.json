@@ -1,0 +1,9 @@
+{
+  "dowsing_rod_found_ore":
+  {
+    "subtitle": "sounds.tutorial_mod.dowsing_rod_found_ore",
+    "sounds": [
+      "tutorial_mod:dowsing_rod_found_ore"
+    ]
+  }
+}

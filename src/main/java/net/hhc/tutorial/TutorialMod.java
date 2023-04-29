@@ -3,6 +3,7 @@ package net.hhc.tutorial;
 import com.mojang.logging.LogUtils;
 import net.hhc.tutorial.block.ModBlocks;
 import net.hhc.tutorial.item.ModItems;
+import net.hhc.tutorial.sound.ModSounds;
 import net.hhc.tutorial.util.ModItemProperties;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
@@ -41,6 +42,7 @@ public class TutorialMod
 
         ModItems.register(eventBus);
         ModBlocks.register(eventBus);
+        ModSounds.register(eventBus);
 
 
         eventBus.addListener(this::setup);
