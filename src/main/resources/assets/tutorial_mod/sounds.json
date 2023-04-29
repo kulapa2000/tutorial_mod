@@ -5,5 +5,35 @@
     "sounds": [
       "tutorial_mod:dowsing_rod_found_ore"
     ]
+  },
+  "cobalt_lamp_break": {
+    "subtitle": "tutorial_mod.cobalt_lamp_break",
+    "sounds": [
+      "tutorial_mod:cobalt_lamp_break"
+    ]
+  },
+  "cobalt_lamp_step": {
+    "subtitle": "tutorial_mod.cobalt_lamp_step",
+    "sounds": [
+      "tutorial_mod:cobalt_lamp_step"
+    ]
+  },
+  "cobalt_lamp_place": {
+    "subtitle": "tutorial_mod.cobalt_lamp_place",
+    "sounds": [
+      "tutorial_mod:cobalt_lamp_place"
+    ]
+  },
+  "cobalt_lamp_hit": {
+    "subtitle": "tutorial_mod.cobalt_lamp_hit",
+    "sounds": [
+      "tutorial_mod:cobalt_lamp_hit"
+    ]
+  },
+  "cobalt_lamp_fall": {
+    "subtitle": "tutorial_mod.cobalt_lamp_fall",
+    "sounds": [
+      "tutorial_mod:cobalt_lamp_fall"
+    ]
   }
 }

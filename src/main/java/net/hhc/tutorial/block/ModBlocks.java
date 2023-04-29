@@ -6,6 +6,7 @@ import net.hhc.tutorial.block.custom.SpeedyBlock;
 import net.hhc.tutorial.block.custom.TurnipCropBlock;
 import net.hhc.tutorial.item.ModCreativeModeTab;
 import net.hhc.tutorial.item.ModItems;
+import net.hhc.tutorial.sound.ModSounds;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.*;
@@ -92,7 +93,7 @@ public class ModBlocks {
             ()->new TrapDoorBlock(BlockBehaviour.Properties.of(Material.WOOD).noOcclusion().strength(4f).requiresCorrectToolForDrops()),ModCreativeModeTab.CREATIVE_MODE_TAB);
 
     public static final RegistryObject<Block>COBALT_LAMP=registerBlock("cobalt_lamp",
-            ()->new CobaltLampBlock(BlockBehaviour.Properties.of(Material.METAL).lightLevel((state)->state.getValue(CobaltLampBlock.CLICKED)? 15:0).strength(4f).requiresCorrectToolForDrops()),ModCreativeModeTab.CREATIVE_MODE_TAB);
+            ()->new CobaltLampBlock(BlockBehaviour.Properties.of(Material.METAL).sound(ModSounds.COBALT_LAMP_SOUNDS).lightLevel((state)->state.getValue(CobaltLampBlock.CLICKED)? 15:0).strength(4f).requiresCorrectToolForDrops()),ModCreativeModeTab.CREATIVE_MODE_TAB);
 
     public static final RegistryObject<Block>TURNIP_CROP=BLOCKS.register("turnip_crop",
             ()->new TurnipCropBlock(BlockBehaviour.Properties.copy(Blocks.BEETROOTS).noOcclusion().noCollission()));
