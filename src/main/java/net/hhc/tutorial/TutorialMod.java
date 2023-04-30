@@ -1,10 +1,13 @@
 package net.hhc.tutorial;
 
+
 import com.mojang.logging.LogUtils;
 import net.hhc.tutorial.block.ModBlocks;
 import net.hhc.tutorial.block.entity.ModBlockEntities;
 import net.hhc.tutorial.fluid.ModFluids;
 import net.hhc.tutorial.item.ModItems;
+
+import net.hhc.tutorial.multiblock.*;
 import net.hhc.tutorial.recipe.ModRecipes;
 import net.hhc.tutorial.screen.CobaltBlasterScreen;
 import net.hhc.tutorial.screen.ModMenuTypes;
@@ -13,18 +16,15 @@ import net.hhc.tutorial.util.ModItemProperties;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.world.level.block.Block;
+
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.InterModComms;
+
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
-import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
-import net.minecraftforge.event.server.ServerStartingEvent;
+
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 
@@ -53,14 +53,18 @@ public class TutorialMod
         ModBlockEntities.register(eventBus);
         ModMenuTypes.register(eventBus);
         ModRecipes.register(eventBus);
+        ModMultiBlocks.register(eventBus);
 
         eventBus.addListener(this::setup);
         eventBus.addListener(this::clientSetup);
+
         // Register the enqueueIMC method for modloading
 
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(new CheckEventHandler());
+
     }
 
     private void setup(final FMLCommonSetupEvent event)
@@ -68,6 +72,9 @@ public class TutorialMod
         // some preinit code
         LOGGER.info("HELLO FROM PREINIT");
         LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
+
+
+        CheckEventHandler.getInstance().addCheckEventListener(new TestListener());
     }
 
     private void clientSetup(final FMLCommonSetupEvent event)
@@ -83,8 +90,9 @@ public class TutorialMod
 
         MenuScreens.register(ModMenuTypes.COBALT_BLASTER_MENU.get(), CobaltBlasterScreen::new);
         ModItemProperties.addCustomItemProperties();
-        LOGGER.info("client setup");
     }
+
+
 
 
 }
