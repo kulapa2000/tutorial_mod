@@ -26,6 +26,9 @@ public class ModItems {
     public static final RegistryObject<Item> COBALT_NUGGET= ITEMS.register("cobalt_nugget",
             ()->new Item(new Item.Properties().tab(ModCreativeModeTab.CREATIVE_MODE_TAB)));
 
+    public static final RegistryObject<Item> RAW_COBALT = ITEMS.register("raw_cobalt",
+            () -> new Item(new Item.Properties().tab(ModCreativeModeTab.CREATIVE_MODE_TAB)));
+
     public static final RegistryObject<Item> DOWSING_ROD= ITEMS.register("dowsing_rod",
             ()->new DowsingRodItem(new Item.Properties().tab(ModCreativeModeTab.CREATIVE_MODE_TAB)));
 

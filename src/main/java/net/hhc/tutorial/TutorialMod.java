@@ -2,10 +2,15 @@ package net.hhc.tutorial;
 
 import com.mojang.logging.LogUtils;
 import net.hhc.tutorial.block.ModBlocks;
+import net.hhc.tutorial.block.entity.ModBlockEntities;
 import net.hhc.tutorial.fluid.ModFluids;
 import net.hhc.tutorial.item.ModItems;
+import net.hhc.tutorial.recipe.ModRecipes;
+import net.hhc.tutorial.screen.CobaltBlasterScreen;
+import net.hhc.tutorial.screen.ModMenuTypes;
 import net.hhc.tutorial.sound.ModSounds;
 import net.hhc.tutorial.util.ModItemProperties;
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.level.block.Block;
@@ -45,6 +50,9 @@ public class TutorialMod
         ModBlocks.register(eventBus);
         ModSounds.register(eventBus);
         ModFluids.register(eventBus);
+        ModBlockEntities.register(eventBus);
+        ModMenuTypes.register(eventBus);
+        ModRecipes.register(eventBus);
 
         eventBus.addListener(this::setup);
         eventBus.addListener(this::clientSetup);
@@ -73,7 +81,9 @@ public class TutorialMod
         ItemBlockRenderTypes.setRenderLayer(ModFluids.HONEY_FLUID.get(), RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(ModFluids.HONEY_FLOWING.get(), RenderType.translucent());
 
+        MenuScreens.register(ModMenuTypes.COBALT_BLASTER_MENU.get(), CobaltBlasterScreen::new);
         ModItemProperties.addCustomItemProperties();
+        LOGGER.info("client setup");
     }
 
 

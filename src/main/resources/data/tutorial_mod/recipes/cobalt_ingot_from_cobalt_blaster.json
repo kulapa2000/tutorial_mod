@@ -1,0 +1,14 @@
+{
+  "type": "tutorial_mod:cobalt_blasting",
+  "ingredients": [
+    {
+      "item": "minecraft:golden_pickaxe"
+    },
+    {
+      "item": "tutorial_mod:cobalt_ingot"
+    }
+  ],
+  "output": {
+    "item": "tutorial_mod:cobalt_block"
+  }
+}
