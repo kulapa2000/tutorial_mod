@@ -47,6 +47,9 @@ public class ModItems {
     public static final RegistryObject<Item> HONEY_BUCKET= ITEMS.register("honey_bucket",
             ()->new BucketItem(ModFluids.HONEY_FLUID,new Item.Properties().durability(500).tab(ModCreativeModeTab.CREATIVE_MODE_TAB)));
 
+    public static final RegistryObject<Item> SBZDY= ITEMS.register("sbzdy",
+            ()->new Item(new Item.Properties().tab(ModCreativeModeTab.CREATIVE_MODE_TAB)));
+
 
 
 }
