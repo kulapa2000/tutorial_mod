@@ -10,4 +10,6 @@ public class DisplayBlockEntity extends BlockEntity {
     {
         super(ModMultiBlockEntities.DISPLAY_BLOCK.get(), pPos, pBlockState);
     }
+
+
 }

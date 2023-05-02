@@ -14,5 +14,6 @@ public class ClientModEvents {
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event)
     {
         event.registerBlockEntityRenderer(ModMultiBlockEntities.DISPLAY_BLOCK.get(),DisPlayBlockEntityRenderer::new);
+       DynamicModel TESTMODEL= new DynamicModel("test_block");
     }
 }
