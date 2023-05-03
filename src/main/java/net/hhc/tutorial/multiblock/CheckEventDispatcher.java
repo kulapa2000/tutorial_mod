@@ -27,7 +27,6 @@ public class CheckEventDispatcher {
         for (CheckEventListener listener : listeners)
         {
             listener.onEvent(event);
-
         }
     }
 }

@@ -2,32 +2,47 @@ package net.hhc.tutorial.machine;
 
 import com.mojang.logging.LogUtils;
 import net.hhc.tutorial.TutorialMod;
+import net.hhc.tutorial.network.ClientboundCoreBlockUpdatepacket;
+import net.hhc.tutorial.network.PacketHandler;
+import net.hhc.tutorial.network.ServerboundCoreBlockUpdatePacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.network.PacketDistributor;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
-@Mod.EventBusSubscriber(modid=TutorialMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-public class SuperBlock extends Block  {
+import java.util.Arrays;
+
+import static net.hhc.tutorial.machine.PartBlock.IS_ASSEMBLED;
+
+
+@Mod.EventBusSubscriber(modid = TutorialMod.MOD_ID,bus= Mod.EventBusSubscriber.Bus.FORGE)
+public class SuperBlock extends Block {
 
     private static final Logger LOGGER = LogUtils.getLogger();
     public SuperBlock(Properties pProperties)
     {
         super(pProperties);
         this.registerDefaultState(this.defaultBlockState().setValue(IS_ASSEMBLED,false));
-
     }
 
     public static final BooleanProperty IS_ASSEMBLED=BooleanProperty.create("is_assembled");
@@ -38,69 +53,66 @@ public class SuperBlock extends Block  {
     }
 
 
-    @SubscribeEvent
-    public static void onPlayerInteract(PlayerInteractEvent event)
-    {
-
-        BlockPos blockPos=event.getPos();
-        BlockState blockState1=event.getWorld().getBlockState((blockPos.above(1)));
-        BlockState blockState2=event.getWorld().getBlockState((blockPos.above(2)));
-        if(!event.getWorld().isClientSide()&&event.getPlayer().getMainHandItem().getItem().equals(Items.STICK)&&event.getWorld().getBlockState(blockPos).getBlock() instanceof SuperBlock)
-        {
-            if(event.getWorld().getBlockState(blockPos.above(1)).getBlock() instanceof PartBlock&&(event.getWorld().getBlockState(blockPos.above(2)).getBlock() instanceof PartBlock))
-            {
-                LOGGER.info("should assemble");
-                event.getWorld().setBlock(blockPos.above(1),blockState1.setValue(IS_ASSEMBLED,true),3);
-                event.getWorld().setBlock(blockPos.above(2),blockState1.setValue(IS_ASSEMBLED,true),3);
-                event.getWorld().setBlock(blockPos,blockState1.setValue(IS_ASSEMBLED,true),3);
-            }
-            else
-            {
-                event.getWorld().setBlock(blockPos,event.getWorld().getBlockState(blockPos).setValue(IS_ASSEMBLED,false),3);
-                LOGGER.info("no assemble");
-            }
-
-        }
-    }
-
-    /*
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         if(!pLevel.isClientSide()&&pPlayer.getMainHandItem().getItem().equals(Items.STICK))
         {
+            BlockState blockState1=pLevel.getBlockState((pPos.above(1)));
+            BlockState blockState2=pLevel.getBlockState((pPos.above(2)));
+
+            BlockPos upperPos = pPos.above(1);
+            BlockPos lowerPos = pPos.above(2);
+
+
             if(pLevel.getBlockState(pPos.above(1)).getBlock() instanceof PartBlock&&(pLevel.getBlockState(pPos.above(2)).getBlock() instanceof PartBlock))
             {
-                LOGGER.info("clicked");
-                CheckEvent event = new CheckEvent(this, pPos,pPos.above(1),pPos.above(2) ,pLevel);
-                CheckEventHandler.getInstance().dispatchCheckEvent(event);
-                pLevel.setBlock(pPos,pState.setValue(IS_ASSEMBLED,true),3);
+                LOGGER.info("should assemble");
+                BlockEntity blockEntity=pLevel.getBlockEntity(pPos);
+
+                if(blockEntity instanceof SuperBlockEntity)
+                {
+                    ((SuperBlockEntity) blockEntity).childPositions.set(0,upperPos);
+                    ((SuperBlockEntity) blockEntity).childPositions.set(1,lowerPos);
+                }
+
+
+                pLevel.setBlock(pPos,pState.setValue(SuperBlock.IS_ASSEMBLED,true),3);
+                pLevel.setBlock(pPos.above(1),blockState1.setValue(PartBlock.IS_ASSEMBLED,true),3);
+                pLevel.setBlock(pPos.above(2),blockState2.setValue(PartBlock.IS_ASSEMBLED,true),3);
+
             }
             else
             {
-                pLevel.setBlock(pPos,pState.setValue(IS_ASSEMBLED,false),3);
+                LOGGER.info("no assemble");
             }
-
-            PacketHandler.INSTANCE.sendToServer(new ServerboundCoreBlockUpdatePacket(pPos));
-            PacketHandler.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with
-                    ( ()->pLevel.getChunkAt(pPos)),new ClientboundCoreBlockUpdatepacket(pPos));
 
         }
         return InteractionResult.SUCCESS;
     }
-*/
+
     @Deprecated
     public RenderShape getRenderShape(BlockState pState)
     {
-        if(pState.getValue(IS_ASSEMBLED)==true)
+
+        if(pState.getValue(SuperBlock.IS_ASSEMBLED)==true)
         {
             return RenderShape.INVISIBLE;
         }
-
         return RenderShape.MODEL;
     }
 
+    public void DisassembleAll(Level level,SuperBlockEntity superBlockEntity)
+    {
+        level.setBlock(superBlockEntity.childPositions.get(0),level.getBlockState(superBlockEntity.childPositions.get(0)).setValue(PartBlock.IS_ASSEMBLED,false),3);
+        level.setBlock(superBlockEntity.childPositions.get(1),level.getBlockState(superBlockEntity.childPositions.get(1)).setValue(PartBlock.IS_ASSEMBLED,false),3);
+    }
+
+
+
+
     @Override
-    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        return InteractionResult.SUCCESS;
+    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid)
+    {
+        return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
     }
 }

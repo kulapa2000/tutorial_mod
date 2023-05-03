@@ -42,9 +42,12 @@ public class CobaltBlasterBlockEntity extends BlockEntity implements MenuProvide
     private int maxFuelTime=0;
     public CobaltBlasterBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
         super(ModBlockEntities.COBALT_BLASTER.get(), pWorldPosition, pBlockState);
-        this.data = new ContainerData() {
-            public int get(int index) {
-                switch (index) {
+        this.data = new ContainerData()
+        {
+            public int get(int index)
+            {
+                switch (index)
+                {
                     case 0: return CobaltBlasterBlockEntity.this.progress;
                     case 1: return CobaltBlasterBlockEntity.this.maxProgress;
                     case 2: return CobaltBlasterBlockEntity.this.fuelTime;
@@ -53,8 +56,10 @@ public class CobaltBlasterBlockEntity extends BlockEntity implements MenuProvide
                 }
             }
 
-            public void set(int index, int value) {
-                switch(index) {
+            public void set(int index, int value)
+            {
+                switch(index)
+                {
                     case 0: CobaltBlasterBlockEntity.this.progress = value; break;
                     case 1: CobaltBlasterBlockEntity.this.maxProgress = value; break;
                     case 2: CobaltBlasterBlockEntity.this.fuelTime = value; break;
