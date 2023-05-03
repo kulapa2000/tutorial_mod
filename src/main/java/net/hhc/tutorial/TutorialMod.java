@@ -7,12 +7,15 @@ import net.hhc.tutorial.block.entity.ModBlockEntities;
 import net.hhc.tutorial.fluid.ModFluids;
 import net.hhc.tutorial.item.ModItems;
 
+import net.hhc.tutorial.machine.PartBlock;
+import net.hhc.tutorial.machine.SuperBlockEntity;
 import net.hhc.tutorial.multiblock.*;
 import net.hhc.tutorial.recipe.ModRecipes;
 import net.hhc.tutorial.screen.CobaltBlasterScreen;
 import net.hhc.tutorial.screen.ModMenuTypes;
 import net.hhc.tutorial.sound.ModSounds;
 import net.hhc.tutorial.util.ModItemProperties;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
@@ -21,8 +24,11 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -33,6 +39,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 
+import java.util.Collection;
 import java.util.stream.Collectors;
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -79,7 +86,8 @@ public class TutorialMod
         LOGGER.info("HELLO FROM PREINIT");
         LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
 
-        CheckEventHandler.getInstance().addCheckEventListener(new TestListener());
+
+        //CheckEventHandler.getInstance().addCheckEventListener(new );
     }
 
     private void clientSetup(final FMLCommonSetupEvent event)

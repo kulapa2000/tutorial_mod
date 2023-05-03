@@ -7,6 +7,8 @@ import net.hhc.tutorial.block.custom.SpeedyBlock;
 import net.hhc.tutorial.block.custom.TurnipCropBlock;
 import net.hhc.tutorial.item.ModCreativeModeTab;
 import net.hhc.tutorial.item.ModItems;
+import net.hhc.tutorial.machine.PartBlock;
+import net.hhc.tutorial.machine.SuperBlock;
 import net.hhc.tutorial.sound.ModSounds;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -101,5 +103,12 @@ public class ModBlocks {
 
     public static final RegistryObject<Block>COBALT_BLASTER=registerBlock("cobalt_blaster",
             ()->new CobaltBlasterBlock(BlockBehaviour.Properties.of(Material.METAL).noOcclusion().strength(5f).requiresCorrectToolForDrops()), ModCreativeModeTab.CREATIVE_MODE_TAB);
+
+    public static final RegistryObject<Block>PART_BLOCK=registerBlock("part_block",
+            ()->new PartBlock(BlockBehaviour.Properties.of(Material.METAL).noOcclusion().strength(5f)), ModCreativeModeTab.CREATIVE_MODE_TAB);
+
+    public static final RegistryObject<Block>SUPER_BLOCK=registerBlock("super_block",
+            ()->new SuperBlock(BlockBehaviour.Properties.of(Material.METAL).noOcclusion().strength(5f)), ModCreativeModeTab.CREATIVE_MODE_TAB);
+
 
 }

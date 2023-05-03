@@ -32,7 +32,7 @@ public class CoreBlock extends Block{
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         if(!pLevel.isClientSide()&&pPlayer.getMainHandItem().getItem().equals(Items.STICK))
         {
-            CheckEvent event = new CheckEvent(this, pPos, pLevel);
+            CheckEvent event = new CheckEvent(this, pPos,pPos.above(),pPos.above(1) ,pLevel);
             CheckEventHandler.getInstance().dispatchCheckEvent(event);
             PacketHandler.INSTANCE.sendToServer(new ServerboundCoreBlockUpdatePacket(pPos));
             PacketHandler.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with

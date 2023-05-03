@@ -10,6 +10,7 @@ import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Properties;
@@ -28,7 +29,7 @@ public class DisplayBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public RenderShape getRenderShape(BlockState blockState)
+    public  RenderShape getRenderShape(BlockState blockState)
     {
         return RenderShape.ENTITYBLOCK_ANIMATED;
     }

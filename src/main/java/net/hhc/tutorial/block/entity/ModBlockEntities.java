@@ -2,6 +2,7 @@ package net.hhc.tutorial.block.entity;
 
 import net.hhc.tutorial.TutorialMod;
 import net.hhc.tutorial.block.ModBlocks;
+import net.hhc.tutorial.machine.SuperBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -14,6 +15,9 @@ public class ModBlockEntities {
 
     public static final RegistryObject<BlockEntityType<CobaltBlasterBlockEntity>> COBALT_BLASTER= BLOCK_ENTITIES.register("cobalt_blaster",
             ()->BlockEntityType.Builder.of(CobaltBlasterBlockEntity::new, ModBlocks.COBALT_BLASTER.get()).build(null));
+
+    public static final RegistryObject<BlockEntityType<SuperBlockEntity>> SUPER_BLOCK= BLOCK_ENTITIES.register("super_block",
+            ()->BlockEntityType.Builder.of(SuperBlockEntity::new, ModBlocks.SUPER_BLOCK.get()).build(null));
     public static void register(IEventBus eventBus)
     {
         BLOCK_ENTITIES.register(eventBus);
