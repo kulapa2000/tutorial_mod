@@ -74,7 +74,7 @@ public class PartBlock extends Block {
         Block block= level.getBlockState(pos).getBlock();
         if(block instanceof PartBlock partBlock)
         {
-            if(partBlock.superBlockPos!=null)
+            if(partBlock.superBlockPos!=null && state.getValue(PartBlock.IS_ASSEMBLED)==true)
             {
                 BlockEntity blockEntity=level.getBlockEntity( partBlock.getSuperBlockPos());
 

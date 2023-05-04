@@ -21,6 +21,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
 
 import net.minecraft.world.phys.shapes.BooleanOp;
@@ -75,7 +76,6 @@ public class SuperBlock extends Block implements EntityBlock {
                     ((SuperBlockEntity) blockEntity).childPositions.add(upperPos);
                     ((SuperBlockEntity) blockEntity).childPositions.add(lowerPos);
 
-                    LOGGER.info("superblockentitypos:"+blockEntity.getBlockPos());
                 }
 
                 pLevel.setBlock(pPos,pState.setValue(SuperBlock.IS_ASSEMBLED,true),3);
@@ -91,13 +91,7 @@ public class SuperBlock extends Block implements EntityBlock {
                 {
                     partBlock2.setSuperBlockPos(pPos);
                 }
-
             }
-            else
-            {
-                LOGGER.info("no assemble");
-            }
-
         }
         return InteractionResult.SUCCESS;
     }
@@ -119,10 +113,31 @@ public class SuperBlock extends Block implements EntityBlock {
         return new  SuperBlockEntity(pPos,pState);
     }
 
+    @Override
+    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid)
+    {
+        if(state.getValue(SuperBlock.IS_ASSEMBLED)==true)
+        {
+            BlockEntity blockEntity = level.getBlockEntity(pos);
+            if (blockEntity instanceof SuperBlockEntity superBlockEntity)
+            {
+                if(superBlockEntity.childPositions.size()>=2)
+                {
+                    LOGGER.info("child list size:  "+superBlockEntity.childPositions.size());
+                    level.setBlock(superBlockEntity.childPositions.get(0), level.getBlockState(superBlockEntity.childPositions.get(0)).setValue(PartBlock.IS_ASSEMBLED, false), 3);
+                    level.setBlock(superBlockEntity.childPositions.get(1), level.getBlockState(superBlockEntity.childPositions.get(1)).setValue(PartBlock.IS_ASSEMBLED, false), 3);
+                    state=state.setValue(SuperBlock.IS_ASSEMBLED,false);
+                    superBlockEntity.childPositions.clear();
+                }
+            }
 
+        }
+            return  super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
+    }
 
     //@Override
     //public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {return Shapes.or(Block.box(0, 0, 0, 16, 16, 16), Block.box(0, 0, 0, 16, 32, 16));}
 
 
 }
+
