@@ -2,6 +2,7 @@ package net.hhc.tutorial.machine;
 
 import com.mojang.logging.LogUtils;
 import net.hhc.tutorial.TutorialMod;
+import net.hhc.tutorial.block.entity.CobaltBlasterBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -10,10 +11,13 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 
+import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
@@ -31,10 +35,9 @@ import org.slf4j.Logger;
 
 import java.util.stream.Stream;
 
-@Mod.EventBusSubscriber(modid = TutorialMod.MOD_ID,bus= Mod.EventBusSubscriber.Bus.FORGE)
+
 public class SuperBlock extends Block implements EntityBlock {
 
-    private SuperBlockEntity superBlockEntity;
     private static final Logger LOGGER = LogUtils.getLogger();
     public SuperBlock(Properties pProperties)
     {
@@ -71,6 +74,8 @@ public class SuperBlock extends Block implements EntityBlock {
                 {
                     ((SuperBlockEntity) blockEntity).childPositions.add(upperPos);
                     ((SuperBlockEntity) blockEntity).childPositions.add(lowerPos);
+
+                    LOGGER.info("superblockentitypos:"+blockEntity.getBlockPos());
                 }
 
                 pLevel.setBlock(pPos,pState.setValue(SuperBlock.IS_ASSEMBLED,true),3);
@@ -108,30 +113,12 @@ public class SuperBlock extends Block implements EntityBlock {
         return RenderShape.MODEL;
     }
 
-    public void DisassembleAll(Level level,SuperBlockEntity superBlockEntity)
-    {
-        level.setBlock(superBlockEntity.childPositions.get(0),level.getBlockState(superBlockEntity.childPositions.get(0)).setValue(PartBlock.IS_ASSEMBLED,false),3);
-        level.setBlock(superBlockEntity.childPositions.get(1),level.getBlockState(superBlockEntity.childPositions.get(1)).setValue(PartBlock.IS_ASSEMBLED,false),3);
-    }
-
-    @SubscribeEvent
-    public static void onBreakEvent(BreakEvent event)
-    {
-        SuperBlockEntity superBlockEntity = event.getSuperBlockEntity();
-        BlockPos superBlockpos=superBlockEntity.getBlockPos();
-        event.getLevel().setBlock(superBlockpos.above(1),event.getLevel().getBlockState(superBlockpos.above(1)).setValue(PartBlock.IS_ASSEMBLED,false),3);
-        event.getLevel().setBlock(superBlockpos.above(1),event.getLevel().getBlockState(superBlockpos.above(1)).setValue(PartBlock.IS_ASSEMBLED,false),3);
-        event.getLevel().setBlock(superBlockpos,superBlockEntity.getBlockState().setValue(SuperBlock.IS_ASSEMBLED,false),3);
-        superBlockEntity.childPositions.clear();
-        LOGGER.info("breakevent received,superentity pos: "+event.getSuperBlockEntity().getBlockPos());
-    }
-
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        superBlockEntity = new SuperBlockEntity(pPos, pState);
-        return superBlockEntity;
+        return new  SuperBlockEntity(pPos,pState);
     }
+
 
 
     //@Override

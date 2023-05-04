@@ -32,7 +32,7 @@ public class PartBlock extends Block {
     private static final Logger LOGGER = LogUtils.getLogger();
 
 
-    public BlockPos superBlockPos;
+    private BlockPos superBlockPos;
 
     public BlockPos getSuperBlockPos() {
         return superBlockPos;
@@ -82,8 +82,13 @@ public class PartBlock extends Block {
                 {
                     if(superBlockEntity.childPositions.contains(pos))
                     {
-                        MinecraftForge.EVENT_BUS.post(new BreakEvent(level, pos, state, superBlockEntity));
-                        LOGGER.info("breakevent fired");
+                        int index=superBlockEntity.childPositions.indexOf(pos);
+                        superBlockEntity.childPositions.remove(index);
+                        level.setBlock(superBlockEntity.childPositions.get(0),level.getBlockState(superBlockEntity.childPositions.get(0)).setValue(PartBlock.IS_ASSEMBLED,false),3);
+                        level.setBlock(superBlockPos,superBlockEntity.getBlockState().setValue(SuperBlock.IS_ASSEMBLED,false),3);
+                        superBlockEntity.childPositions.clear();
+                        LOGGER.info("should break"+superBlockEntity.getBlockPos());
+
                     }
                 }
             }
