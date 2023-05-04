@@ -24,7 +24,6 @@ public class DisPlayBlockEntityRenderer implements BlockEntityRenderer<DisplayBl
     private static final Logger LOGGER = LogUtils.getLogger();
     private final BlockEntityRendererProvider.Context context;
 
-
     public static final String NAME = "test_block";
     public static DynamicModel TESTMODEL= new DynamicModel(NAME);
 
@@ -56,17 +55,6 @@ public class DisPlayBlockEntityRenderer implements BlockEntityRenderer<DisplayBl
 
         dispatcher.renderSingleBlock(Blocks.GLASS.defaultBlockState(),pPoseStack,pBufferSource,pPackedLight,pPackedOverlay, EmptyModelData.INSTANCE);
 
-
-        /*
-        final ItemRenderer itemRenderer=Minecraft.getInstance().getItemRenderer();
-        dispatcher.renderSingleBlock(Blocks.GLASS.defaultBlockState(),pPoseStack,pBufferSource,pPackedLight,pPackedOverlay, EmptyModelData.INSTANCE);
-        LocalPlayer player=Minecraft.getInstance().player;
-        final ItemStack heldItem=player.getMainHandItem();
-        pPoseStack.pushPose();
-        pPoseStack.scale(0.75f,0.75f,0.75f);
-        pPoseStack.translate(0.5f,0.5f,0.5f);
-        itemRenderer.renderStatic(player,heldItem, ItemTransforms.TransformType.FIXED,false,pPoseStack,pBufferSource,Minecraft.getInstance().level, pPackedLight,pPackedOverlay,0);
-        pPoseStack.popPose();*/
 
     }
 

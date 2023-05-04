@@ -1,40 +1,26 @@
 package net.hhc.tutorial.machine;
 
 import com.mojang.logging.LogUtils;
-import net.hhc.tutorial.TutorialMod;
-import net.hhc.tutorial.block.entity.CobaltBlasterBlockEntity;
+import net.hhc.tutorial.block.ModBlocks;
+import net.hhc.tutorial.block.custom.CobaltBlasterBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-
-import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
-
-import net.minecraft.world.phys.shapes.BooleanOp;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
-
-import java.util.stream.Stream;
 
 
 public class SuperBlock extends Block implements EntityBlock {
@@ -99,12 +85,7 @@ public class SuperBlock extends Block implements EntityBlock {
     @Deprecated
     public RenderShape getRenderShape(BlockState pState)
     {
-
-        if(pState.getValue(SuperBlock.IS_ASSEMBLED)==true)
-        {
-            return RenderShape.INVISIBLE;
-        }
-        return RenderShape.MODEL;
+        return RenderShape.ENTITYBLOCK_ANIMATED;
     }
 
     @Nullable
@@ -126,18 +107,22 @@ public class SuperBlock extends Block implements EntityBlock {
                     LOGGER.info("child list size:  "+superBlockEntity.childPositions.size());
                     level.setBlock(superBlockEntity.childPositions.get(0), level.getBlockState(superBlockEntity.childPositions.get(0)).setValue(PartBlock.IS_ASSEMBLED, false), 3);
                     level.setBlock(superBlockEntity.childPositions.get(1), level.getBlockState(superBlockEntity.childPositions.get(1)).setValue(PartBlock.IS_ASSEMBLED, false), 3);
-                    state=state.setValue(SuperBlock.IS_ASSEMBLED,false);
+
                     superBlockEntity.childPositions.clear();
                 }
             }
-
         }
             return  super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
     }
 
-    //@Override
-    //public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {return Shapes.or(Block.box(0, 0, 0, 16, 16, 16), Block.box(0, 0, 0, 16, 32, 16));}
-
+    @Override
+    public void onBlockStateChange(LevelReader level, BlockPos pos, BlockState oldState, BlockState newState) {
+        if(level.getBlockEntity(pos) instanceof SuperBlockEntity superBlockEntity)
+        {
+            superBlockEntity.setChanged();
+        }
+        super.onBlockStateChange(level, pos, oldState, newState);
+    }
 
 }
 

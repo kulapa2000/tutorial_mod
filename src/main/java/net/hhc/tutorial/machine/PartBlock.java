@@ -23,7 +23,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.slf4j.Logger;
 
-@Mod.EventBusSubscriber(modid = TutorialMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+
 
 public class PartBlock extends Block {
 
@@ -86,9 +86,7 @@ public class PartBlock extends Block {
                         superBlockEntity.childPositions.remove(index);
                         level.setBlock(superBlockEntity.childPositions.get(0),level.getBlockState(superBlockEntity.childPositions.get(0)).setValue(PartBlock.IS_ASSEMBLED,false),3);
                         level.setBlock(superBlockPos,superBlockEntity.getBlockState().setValue(SuperBlock.IS_ASSEMBLED,false),3);
-                        superBlockEntity.childPositions.clear();
-                        LOGGER.info("should break"+superBlockEntity.getBlockPos());
-
+                        superBlockEntity.childPositions.remove(0);
                     }
                 }
             }

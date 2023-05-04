@@ -25,7 +25,6 @@ public class DynamicModel
     {
         this.name = new ResourceLocation(TutorialMod.MOD_ID, "block/"+desc);
         ForgeModelBakery.addSpecialModel(this.name);
-
     }
 
     public BakedModel get()
