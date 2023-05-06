@@ -104,11 +104,12 @@ public class ModBlocks {
     public static final RegistryObject<Block>COBALT_BLASTER=registerBlock("cobalt_blaster",
             ()->new CobaltBlasterBlock(BlockBehaviour.Properties.of(Material.METAL).noOcclusion().strength(5f).requiresCorrectToolForDrops()), ModCreativeModeTab.CREATIVE_MODE_TAB);
 
-    public static final RegistryObject<Block>PART_BLOCK=registerBlock("part_block",
-            ()->new PartBlock(BlockBehaviour.Properties.of(Material.METAL).noOcclusion().strength(5f)), ModCreativeModeTab.CREATIVE_MODE_TAB);
 
     public static final RegistryObject<Block>SUPER_BLOCK=registerBlock("super_block",
             ()->new SuperBlock(BlockBehaviour.Properties.of(Material.METAL).noOcclusion().strength(5f)), ModCreativeModeTab.CREATIVE_MODE_TAB);
 
+
+    public static final RegistryObject<Block>PART_BLOCK=registerBlock("part_block",
+            ()->new PartBlock(BlockBehaviour.Properties.of(Material.METAL).noOcclusion().strength(5f)), ModCreativeModeTab.CREATIVE_MODE_TAB);
 
 }

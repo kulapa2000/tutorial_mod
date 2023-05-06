@@ -13,13 +13,33 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class SuperBlockEntity extends BlockEntity {
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
+    public static Map<BlockPos,BlockPos> superBlockPosMap=new HashMap<>();
+
+    public void addSuperBlockPosMap(BlockPos superBlockPos,BlockPos partBlockPos)
+    {
+        superBlockPosMap.put(superBlockPos,partBlockPos);
+    }
+
+    public void removeSuperBlockPosMap(BlockPos superBlockPos)
+    {
+        superBlockPosMap.remove(superBlockPos);
+    }
+
+    public static <K, V> K locateSuperBlock(Map<K, V> map, V value) {
+        for (Map.Entry<K, V> entry : map.entrySet())
+        {
+            if (Objects.equals(value, entry.getValue())) {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
 
     private BlockPos blockPos;
     public SuperBlockEntity( BlockPos pPos, BlockState pBlockState)
@@ -30,6 +50,7 @@ public class SuperBlockEntity extends BlockEntity {
         this.childPositions=new ArrayList<>();
         this.childPositions.add(pPos.above(2));
         this.childPositions.add(pPos.above(1));
+
     }
 
 
@@ -67,17 +88,11 @@ public class SuperBlockEntity extends BlockEntity {
             LOGGER.info("\u001B[33m load get state value true  \u001B[0m");
             firstBlockPos = NbtUtils.readBlockPos(nbt.getCompound("firstBlockPos"));
             childPositions.add(firstBlockPos);
-            if(this.getLevel().getBlockState(firstBlockPos).getBlock() instanceof PartBlock partBlock)
-            {
-                partBlock.setSuperBlockPos(this.getBlockPos());
-            }
+
 
             secondBlockPos = NbtUtils.readBlockPos(nbt.getCompound("secondBlockPos"));
             childPositions.add(secondBlockPos);
-            if(this.getLevel().getBlockState(secondBlockPos).getBlock() instanceof PartBlock partBlock)
-            {
-                partBlock.setSuperBlockPos(this.getBlockPos());
-            }
+
 
             //LOGGER.info("\u001B[33msuper entity child list loaded,size :   \u001B[0m"+childPositions.size());
         }

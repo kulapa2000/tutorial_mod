@@ -34,7 +34,6 @@ public class SuperBlock extends Block implements EntityBlock {
         this.registerDefaultState(this.defaultBlockState().setValue(IS_ASSEMBLED,false));
     }
 
-
     public static final BooleanProperty IS_ASSEMBLED=BooleanProperty.create("is_assembled");
 
     @Override
@@ -42,7 +41,6 @@ public class SuperBlock extends Block implements EntityBlock {
     {
         pBuilder.add(IS_ASSEMBLED);
     }
-
 
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit)
@@ -63,23 +61,18 @@ public class SuperBlock extends Block implements EntityBlock {
                     if(!pLevel.getBlockState(pPos).getValue(IS_ASSEMBLED))
                     {
                         LOGGER.info("super block setting called");
-                        ((PartBlock) pLevel.getBlockState(firstBlockPos).getBlock()).setSuperBlockPos(pPos);
-                        ((PartBlock) pLevel.getBlockState(secondBlockPos).getBlock()).setSuperBlockPos(pPos);
+                        superBlockEntity.addSuperBlockPosMap(pPos,firstBlockPos);
+                        superBlockEntity.addSuperBlockPosMap(pPos,secondBlockPos);
+
                         pLevel.setBlock(firstBlockPos,pLevel.getBlockState(firstBlockPos).setValue(PartBlock.IS_ASSEMBLED,true),3);
                         pLevel.setBlock(secondBlockPos,pLevel.getBlockState(secondBlockPos).setValue(PartBlock.IS_ASSEMBLED,true),3);
                         pLevel.setBlock(pPos,superBlockEntity.getBlockState().setValue(SuperBlock.IS_ASSEMBLED,true),3);
-
                     }
-
-
                 }
 
             }
-
-
             return InteractionResult.SUCCESS;
         }
-
         return super.use(pState,pLevel,pPos,pPlayer,pHand,pHit);
     }
 
