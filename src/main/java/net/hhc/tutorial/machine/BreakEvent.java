@@ -11,15 +11,10 @@ public class BreakEvent extends Event {
     private Level level;
     private BlockPos blockPos;
 
-    private BlockState blockState;
 
-    private SuperBlockEntity superBlockEntity;
-
-    public BreakEvent(Level level, BlockPos blockPos,BlockState blockState,SuperBlockEntity superBlockEntity) {
+    public BreakEvent(Level level, BlockPos blockPos) {
         this.level = level;
-        this.blockPos = blockPos;
-        this.blockState=blockState;
-        this.superBlockEntity = superBlockEntity;
+        this.blockPos = new BlockPos(blockPos);
     }
 
     public Level getLevel() {
@@ -30,9 +25,4 @@ public class BreakEvent extends Event {
         return blockPos;
     }
 
-    public BlockState getBlockState() {
-        return blockState;
-    }
-
-    public SuperBlockEntity getSuperBlockEntity() {return superBlockEntity;}
 }

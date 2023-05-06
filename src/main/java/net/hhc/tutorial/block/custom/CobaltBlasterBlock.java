@@ -1,5 +1,6 @@
 package net.hhc.tutorial.block.custom;
 
+import com.mojang.logging.LogUtils;
 import net.hhc.tutorial.block.entity.CobaltBlasterBlockEntity;
 import net.hhc.tutorial.block.entity.ModBlockEntities;
 import net.minecraft.core.BlockPos;
@@ -19,6 +20,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -26,14 +28,18 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
 
 import java.util.stream.Stream;
 
 
 public class CobaltBlasterBlock extends BaseEntityBlock {
     public CobaltBlasterBlock(Properties pProperties) {
+
         super(pProperties);
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
+        LOGGER.info("\u001B[33m cobalt blaster block constructor called   \u001B[0m");
+
     }
 
     public static final DirectionProperty FACING= BlockStateProperties.HORIZONTAL_FACING;
@@ -125,9 +131,12 @@ public class CobaltBlasterBlock extends BaseEntityBlock {
         }
     }
 
+    private static final Logger LOGGER = LogUtils.getLogger();
+
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
+        LOGGER.info("\u001B[33mnew blaster entity called\u001B[0m");
         return new CobaltBlasterBlockEntity(pPos,pState);
     }
 
@@ -138,6 +147,8 @@ public class CobaltBlasterBlock extends BaseEntityBlock {
 
     @Override
     public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
+        LOGGER.info("\u001B[33mon remove called called\u001B[0m");
+
         if (pState.getBlock() != pNewState.getBlock()) {
             BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
             if (blockEntity instanceof CobaltBlasterBlockEntity) {
@@ -165,5 +176,12 @@ public class CobaltBlasterBlock extends BaseEntityBlock {
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
         return createTickerHelper(pBlockEntityType, ModBlockEntities.COBALT_BLASTER.get(), CobaltBlasterBlockEntity::tick);
+    }
+
+    @Override
+    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
+        LOGGER.info("\u001B[33mblaster ondestroyed called\u001B[0m");
+
+        return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
     }
 }

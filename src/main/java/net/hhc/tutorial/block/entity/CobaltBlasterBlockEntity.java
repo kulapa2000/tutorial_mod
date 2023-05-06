@@ -1,5 +1,7 @@
 package net.hhc.tutorial.block.entity;
 
+import com.mojang.datafixers.TypeRewriteRule;
+import com.mojang.logging.LogUtils;
 import net.hhc.tutorial.item.ModItems;
 import net.hhc.tutorial.recipe.CobaltBlasterRecipe;
 import net.hhc.tutorial.screen.CobaltBlasterMenu;
@@ -29,19 +31,31 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class CobaltBlasterBlockEntity extends BlockEntity implements MenuProvider {
+
+    private static final Logger LOGGER = LogUtils.getLogger();
 
     protected final ContainerData data;
     private int progress=0;
     private int maxProgress=72;
     private int fuelTime=0;
     private int maxFuelTime=0;
+
+    public  List<BlockPos> childPositions=new ArrayList<>();
     public CobaltBlasterBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
+
         super(ModBlockEntities.COBALT_BLASTER.get(), pWorldPosition, pBlockState);
+
+
+        LOGGER.info("\u001B[33mblaster entity new child list called, list size:  \u001B[0m"+this.childPositions.size());
+
         this.data = new ContainerData()
         {
             public int get(int index)
@@ -71,6 +85,8 @@ public class CobaltBlasterBlockEntity extends BlockEntity implements MenuProvide
                 return 4;
             }
         };
+
+        LOGGER.info("\u001B[33mblaster entity constructor called\u001B[0m");
     }
     @Override
     public Component getDisplayName() {
@@ -106,6 +122,7 @@ public class CobaltBlasterBlockEntity extends BlockEntity implements MenuProvide
     public void onLoad() {
         super.onLoad();
         lazyItemHandler = LazyOptional.of(() -> itemHandler);
+        LOGGER.info("\u001B[33monlaod called\u001B[0m");
     }
 
     @Override
@@ -122,6 +139,7 @@ public class CobaltBlasterBlockEntity extends BlockEntity implements MenuProvide
         tag.putInt("blaster.fuelTime", fuelTime);
         tag.putInt("blaster.maxFuelTime", maxFuelTime);
         super.saveAdditional(tag);
+        LOGGER.info("\u001B[33msave additional called\u001B[0m");
     }
 
     @Override
@@ -131,6 +149,7 @@ public class CobaltBlasterBlockEntity extends BlockEntity implements MenuProvide
         progress = nbt.getInt("blaster.progress");
         fuelTime = nbt.getInt("blaster.fuelTime");
         maxFuelTime = nbt.getInt("blaster.maxFuelTime");
+        LOGGER.info("\u001B[33mblaster load called\u001B[0m");
     }
 
     public void drops() {
@@ -234,4 +253,6 @@ public class CobaltBlasterBlockEntity extends BlockEntity implements MenuProvide
     private void resetProgress() {
         this.progress = 0;
     }
+
+
 }

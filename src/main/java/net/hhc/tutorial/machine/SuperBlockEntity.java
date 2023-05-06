@@ -6,10 +6,11 @@ import net.hhc.tutorial.block.entity.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
-import net.minecraft.world.inventory.ContainerData;
+
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
+
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
@@ -24,71 +25,65 @@ public class SuperBlockEntity extends BlockEntity {
     public SuperBlockEntity( BlockPos pPos, BlockState pBlockState)
     {
         super(ModBlockEntities.SUPER_BLOCK.get(), pPos, pBlockState);
+        LOGGER.info("\u001B[33msuper block entity constructor called\u001B[0m");
+        this.blockPos=new BlockPos(pPos).immutable();
+        this.childPositions=new ArrayList<>();
+        this.childPositions.add(pPos.above(2));
+        this.childPositions.add(pPos.above(1));
     }
 
 
-    private BlockPos upperBlockPos;
-    private BlockPos lowerBlockPos;
+    private BlockPos firstBlockPos;
+    private BlockPos secondBlockPos;
+    public   List<BlockPos> childPositions;
 
-    public  final List<BlockPos> childPositions = new ArrayList<>();
 
     @Override
     protected void saveAdditional(CompoundTag nbt)
     {
-        if(this.getBlockState().getValue(SuperBlock.IS_ASSEMBLED)==true)
-        {
-            if(upperBlockPos!=null)
-            {
-                nbt.put("upperBlockPos", NbtUtils.writeBlockPos(upperBlockPos));
-            }
-            if (lowerBlockPos != null) {
-                nbt.put("lowerBlockPos", NbtUtils.writeBlockPos(lowerBlockPos));
-            }
 
+        if(this.getBlockState().getValue(SuperBlock.IS_ASSEMBLED))
+        {
+            if (firstBlockPos != null) {
+                nbt.put("firstBlockPos", NbtUtils.writeBlockPos(firstBlockPos));
+            }
+            if (secondBlockPos != null) {
+                nbt.put("secondBlockPos", NbtUtils.writeBlockPos(secondBlockPos));
+            }
         }
         super.saveAdditional(nbt);
     }
 
 
-    @Override
-    public void onChunkUnloaded()
-    {
-        childPositions.clear();
-        super.onChunkUnloaded();
-    }
-
 
     @Override
     public void load(CompoundTag nbt)
     {
-        LOGGER.info("compound tag loadinggggg");
-        if (nbt.contains("upperBlockPos")) {
-            upperBlockPos = NbtUtils.readBlockPos(nbt.getCompound("upperBlockPos"));
-            childPositions.add(upperBlockPos);
-            LOGGER.info("add upper blockpos"+childPositions.size());
-
-        }
-
-        if (nbt.contains("lowerBlockPos")) {
-            lowerBlockPos = NbtUtils.readBlockPos(nbt.getCompound("lowerBlockPos"));
-            childPositions.add(lowerBlockPos);
-            LOGGER.info("add lower blockpos"+childPositions.size());
-        }
-
-        if(this.childPositions==null)
-        {
-            LOGGER.info("nbt data load fail");
-        }
-
-        if(this.getLevel().getBlockState(childPositions.get(0)).getBlock() instanceof PartBlock partBlock)
-        {
-            partBlock.setSuperBlockPos(this.getBlockPos());
-        }
-        if(this.getLevel().getBlockState(childPositions.get(1)).getBlock() instanceof PartBlock partBlock)
-        {
-            partBlock.setSuperBlockPos(this.getBlockPos());
-        }
         super.load(nbt);
+        LOGGER.info("\u001B[33m super entity  load nbt called \u001B[0m"+ this.getBlockPos()+"\u001B[33m super entity child list size: \u001B[0m"+this.childPositions.size()+this.childPositions.get(0));
+
+        if(this.getBlockState().getValue(SuperBlock.IS_ASSEMBLED))
+        {
+            LOGGER.info("\u001B[33m load get state value true  \u001B[0m");
+            firstBlockPos = NbtUtils.readBlockPos(nbt.getCompound("firstBlockPos"));
+            childPositions.add(firstBlockPos);
+            if(this.getLevel().getBlockState(firstBlockPos).getBlock() instanceof PartBlock partBlock)
+            {
+                partBlock.setSuperBlockPos(this.getBlockPos());
+            }
+
+            secondBlockPos = NbtUtils.readBlockPos(nbt.getCompound("secondBlockPos"));
+            childPositions.add(secondBlockPos);
+            if(this.getLevel().getBlockState(secondBlockPos).getBlock() instanceof PartBlock partBlock)
+            {
+                partBlock.setSuperBlockPos(this.getBlockPos());
+            }
+
+            //LOGGER.info("\u001B[33msuper entity child list loaded,size :   \u001B[0m"+childPositions.size());
+        }
+
     }
+
+
 
 }

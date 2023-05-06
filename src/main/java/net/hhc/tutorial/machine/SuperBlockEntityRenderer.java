@@ -1,6 +1,7 @@
 package net.hhc.tutorial.machine;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.logging.LogUtils;
 import net.hhc.tutorial.TutorialMod;
 import net.hhc.tutorial.multiblock.DynamicModel;
 import net.minecraft.client.Minecraft;
@@ -16,27 +17,34 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.ForgeModelBakery;
 import net.minecraftforge.client.model.data.EmptyModelData;
+import org.slf4j.Logger;
 
 public class SuperBlockEntityRenderer implements BlockEntityRenderer<SuperBlockEntity> {
 
 
     public static final String NAME = "test_block";
-    public static BakedModel MULTIBLOCK= new BakedModel(NAME);
-    public static BakedModel COBALT_BLOCK= new BakedModel("cobalt_block");
+    public static DynamicModel MULTIBLOCK= new DynamicModel(NAME);
+    public static DynamicModel COBALT_BLOCK= new DynamicModel("cobalt_block");
+
+    private static final Logger LOGGER = LogUtils.getLogger();
 
 
-    final BlockRenderDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
-    net.minecraft.client.resources.model.BakedModel model = MULTIBLOCK.get();
-    net.minecraft.client.resources.model.BakedModel origin_model = COBALT_BLOCK.get();
+
+
     @Override
     public void render(SuperBlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay)
     {
+
+        net.minecraft.client.resources.model.BakedModel model = MULTIBLOCK.get();
+        net.minecraft.client.resources.model.BakedModel origin_model = COBALT_BLOCK.get();
+        final BlockRenderDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
 
         BlockPos blockPos=pBlockEntity.getBlockPos();
         BlockState blockState = pBlockEntity.getLevel().getBlockState(blockPos);
 
         if(blockState.getBlock() instanceof SuperBlock)
         {
+
             if(blockState.getValue(SuperBlock.IS_ASSEMBLED)==true)
             {
                 pPoseStack.pushPose();

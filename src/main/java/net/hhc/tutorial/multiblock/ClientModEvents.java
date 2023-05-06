@@ -20,7 +20,7 @@ public class ClientModEvents {
         event.registerBlockEntityRenderer(ModMultiBlockEntities.DISPLAY_BLOCK.get(),DisPlayBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.SUPER_BLOCK.get(), SuperBlockEntityRenderer::new);
        DynamicModel TESTMODEL= new DynamicModel("test_block");
-        BakedModel MULTIBLOCK= new BakedModel("test_block");
-        BakedModel COBALT_BLOCK= new BakedModel("cobalt_block");
+        DynamicModel MULTIBLOCK= new DynamicModel("test_block");
+        DynamicModel COBALT_BLOCK= new DynamicModel("cobalt_block");
     }
 }
