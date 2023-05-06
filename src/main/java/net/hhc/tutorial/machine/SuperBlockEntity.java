@@ -19,27 +19,18 @@ public class SuperBlockEntity extends BlockEntity {
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    public static Map<BlockPos,BlockPos> superBlockPosMap=new HashMap<>();
+    public static Map<BlockPos,BlockPos> superBlockPosMap=new HashMap<>();  //key: Partblock, value:  Superblock
 
-    public void addSuperBlockPosMap(BlockPos superBlockPos,BlockPos partBlockPos)
+    public void addSuperBlockPosMap(BlockPos partBlockPos,BlockPos superBlockPos)
     {
-        superBlockPosMap.put(superBlockPos,partBlockPos);
+        superBlockPosMap.put(partBlockPos,superBlockPos);
     }
 
-    public void removeSuperBlockPosMap(BlockPos superBlockPos)
+    public void removeSuperBlockPosMap(BlockPos partBlockPos)
     {
-        superBlockPosMap.remove(superBlockPos);
+        superBlockPosMap.remove(partBlockPos);
     }
 
-    public static <K, V> K locateSuperBlock(Map<K, V> map, V value) {
-        for (Map.Entry<K, V> entry : map.entrySet())
-        {
-            if (Objects.equals(value, entry.getValue())) {
-                return entry.getKey();
-            }
-        }
-        return null;
-    }
 
     private BlockPos blockPos;
     public SuperBlockEntity( BlockPos pPos, BlockState pBlockState)
@@ -99,6 +90,14 @@ public class SuperBlockEntity extends BlockEntity {
 
     }
 
-
+    public static <K, V> List<K> getAllPartBlock(Map<K, V> map, BlockPos superBlockPos) {
+        List<K> keys = new ArrayList<>();
+        for (Map.Entry<K, V> entry : map.entrySet()) {
+            if (Objects.equals(superBlockPos, entry.getValue())) {
+                keys.add(entry.getKey());
+            }
+        }
+        return keys;
+    }
 
 }

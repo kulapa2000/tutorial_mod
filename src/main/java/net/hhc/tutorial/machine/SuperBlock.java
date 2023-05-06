@@ -19,10 +19,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
 
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
+
+import java.util.List;
 
 
 public class SuperBlock extends Block implements EntityBlock {
@@ -61,12 +64,14 @@ public class SuperBlock extends Block implements EntityBlock {
                     if(!pLevel.getBlockState(pPos).getValue(IS_ASSEMBLED))
                     {
                         LOGGER.info("super block setting called");
-                        superBlockEntity.addSuperBlockPosMap(pPos,firstBlockPos);
-                        superBlockEntity.addSuperBlockPosMap(pPos,secondBlockPos);
+                        superBlockEntity.addSuperBlockPosMap(firstBlockPos,pPos);
+                        superBlockEntity.addSuperBlockPosMap(secondBlockPos,pPos);
+                        LOGGER.info("pos added ");
+
+                        pLevel.setBlock(pPos,superBlockEntity.getBlockState().setValue(SuperBlock.IS_ASSEMBLED,true),3);
 
                         pLevel.setBlock(firstBlockPos,pLevel.getBlockState(firstBlockPos).setValue(PartBlock.IS_ASSEMBLED,true),3);
                         pLevel.setBlock(secondBlockPos,pLevel.getBlockState(secondBlockPos).setValue(PartBlock.IS_ASSEMBLED,true),3);
-                        pLevel.setBlock(pPos,superBlockEntity.getBlockState().setValue(SuperBlock.IS_ASSEMBLED,true),3);
                     }
                 }
 
@@ -88,23 +93,19 @@ public class SuperBlock extends Block implements EntityBlock {
         return new  SuperBlockEntity(pPos,pState);
     }
 
+
     @Override
-    public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving)
-    {
-        if(pState.getValue(SuperBlock.IS_ASSEMBLED))
+    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
+
+        List<BlockPos> allPartBlocks=SuperBlockEntity.getAllPartBlock(SuperBlockEntity.superBlockPosMap,pos);
+        level.setBlock(pos,state.setValue(SuperBlock.IS_ASSEMBLED,false),3);
+        for (int i=0;i<allPartBlocks.size();i++)
         {
-            BlockPos firstBlockPos= ((SuperBlockEntity) pLevel.getBlockEntity(pPos)).childPositions.get(0);
-            BlockPos secondBlockPos= ((SuperBlockEntity) pLevel.getBlockEntity(pPos)).childPositions.get(1);
-
-            pLevel.setBlock(firstBlockPos,pLevel.getBlockState(firstBlockPos).setValue(PartBlock.IS_ASSEMBLED,false),3);
-            pLevel.setBlock(secondBlockPos,pLevel.getBlockState(secondBlockPos).setValue(PartBlock.IS_ASSEMBLED,false),3);
-
-            ((SuperBlockEntity) pLevel.getBlockEntity(pPos)).childPositions.clear();
-            return;
+            level.setBlock(allPartBlocks.get(i),level.getBlockState(allPartBlocks.get(i)).setValue(PartBlock.IS_ASSEMBLED,false),3);
+            SuperBlockEntity.superBlockPosMap.remove(allPartBlocks.get(i));
         }
-        super.onRemove(pState, pLevel, pPos, pNewState, pIsMoving);
+
+        return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
     }
-
-
 }
 
