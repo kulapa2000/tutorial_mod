@@ -54,15 +54,6 @@ public class SuperBlockEntity extends BlockEntity {
     protected void saveAdditional(CompoundTag nbt)
     {
 
-        if(this.getBlockState().getValue(SuperBlock.IS_ASSEMBLED))
-        {
-            if (firstBlockPos != null) {
-                nbt.put("firstBlockPos", NbtUtils.writeBlockPos(firstBlockPos));
-            }
-            if (secondBlockPos != null) {
-                nbt.put("secondBlockPos", NbtUtils.writeBlockPos(secondBlockPos));
-            }
-        }
         super.saveAdditional(nbt);
     }
 
@@ -72,21 +63,7 @@ public class SuperBlockEntity extends BlockEntity {
     public void load(CompoundTag nbt)
     {
         super.load(nbt);
-        LOGGER.info("\u001B[33m super entity  load nbt called \u001B[0m"+ this.getBlockPos()+"\u001B[33m super entity child list size: \u001B[0m"+this.childPositions.size()+this.childPositions.get(0));
 
-        if(this.getBlockState().getValue(SuperBlock.IS_ASSEMBLED))
-        {
-            LOGGER.info("\u001B[33m load get state value true  \u001B[0m");
-            firstBlockPos = NbtUtils.readBlockPos(nbt.getCompound("firstBlockPos"));
-            childPositions.add(firstBlockPos);
-
-
-            secondBlockPos = NbtUtils.readBlockPos(nbt.getCompound("secondBlockPos"));
-            childPositions.add(secondBlockPos);
-
-
-            //LOGGER.info("\u001B[33msuper entity child list loaded,size :   \u001B[0m"+childPositions.size());
-        }
 
     }
 

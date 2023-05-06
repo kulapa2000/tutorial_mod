@@ -11,6 +11,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
@@ -68,17 +69,17 @@ public class SuperBlock extends Block implements EntityBlock {
                         superBlockEntity.addSuperBlockPosMap(secondBlockPos,pPos);
                         LOGGER.info("pos added ");
 
-                        pLevel.setBlock(pPos,superBlockEntity.getBlockState().setValue(SuperBlock.IS_ASSEMBLED,true),3);
+                        pLevel.setBlock(pPos,superBlockEntity.getBlockState().setValue(SuperBlock.IS_ASSEMBLED,true),2);
 
-                        pLevel.setBlock(firstBlockPos,pLevel.getBlockState(firstBlockPos).setValue(PartBlock.IS_ASSEMBLED,true),3);
-                        pLevel.setBlock(secondBlockPos,pLevel.getBlockState(secondBlockPos).setValue(PartBlock.IS_ASSEMBLED,true),3);
+                        pLevel.setBlock(firstBlockPos,pLevel.getBlockState(firstBlockPos).setValue(PartBlock.IS_ASSEMBLED,true),2);
+                        pLevel.setBlock(secondBlockPos,pLevel.getBlockState(secondBlockPos).setValue(PartBlock.IS_ASSEMBLED,true),2);
                     }
                 }
 
             }
             return InteractionResult.SUCCESS;
         }
-        return super.use(pState,pLevel,pPos,pPlayer,pHand,pHit);
+       return super.use(pState,pLevel,pPos,pPlayer,pHand,pHit);
     }
 
     @Override
@@ -97,15 +98,21 @@ public class SuperBlock extends Block implements EntityBlock {
     @Override
     public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
 
-        List<BlockPos> allPartBlocks=SuperBlockEntity.getAllPartBlock(SuperBlockEntity.superBlockPosMap,pos);
-        level.setBlock(pos,state.setValue(SuperBlock.IS_ASSEMBLED,false),3);
-        for (int i=0;i<allPartBlocks.size();i++)
+        if(!level.isClientSide())
         {
-            level.setBlock(allPartBlocks.get(i),level.getBlockState(allPartBlocks.get(i)).setValue(PartBlock.IS_ASSEMBLED,false),3);
-            SuperBlockEntity.superBlockPosMap.remove(allPartBlocks.get(i));
+            List<BlockPos> allPartBlocks=SuperBlockEntity.getAllPartBlock(SuperBlockEntity.superBlockPosMap,pos);
+            level.setBlock(pos,state.setValue(SuperBlock.IS_ASSEMBLED,false),3);
+            for (int i=0;i<allPartBlocks.size();i++)
+            {
+                level.setBlock(allPartBlocks.get(i),level.getBlockState(allPartBlocks.get(i)).setValue(PartBlock.IS_ASSEMBLED,false),3);
+                SuperBlockEntity.superBlockPosMap.remove(allPartBlocks.get(i));
+            }
         }
 
         return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
     }
+
+
+
 }
 
