@@ -68,6 +68,7 @@ public class TutorialMod
         ModMultiBlocks.register(eventBus);
         ModMultiBlockEntities.register(eventBus);
 
+
         eventBus.addListener(this::setup);
         eventBus.addListener(this::clientSetup);
 

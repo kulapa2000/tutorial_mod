@@ -37,6 +37,7 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import  com.google.gson.*;
 
 public class CobaltBlasterBlockEntity extends BlockEntity implements MenuProvider {
 
@@ -139,7 +140,7 @@ public class CobaltBlasterBlockEntity extends BlockEntity implements MenuProvide
         tag.putInt("blaster.fuelTime", fuelTime);
         tag.putInt("blaster.maxFuelTime", maxFuelTime);
         super.saveAdditional(tag);
-        LOGGER.info("\u001B[33msave additional called\u001B[0m");
+
     }
 
     @Override
@@ -149,7 +150,7 @@ public class CobaltBlasterBlockEntity extends BlockEntity implements MenuProvide
         progress = nbt.getInt("blaster.progress");
         fuelTime = nbt.getInt("blaster.fuelTime");
         maxFuelTime = nbt.getInt("blaster.maxFuelTime");
-        LOGGER.info("\u001B[33mblaster load called\u001B[0m");
+
     }
 
     public void drops() {

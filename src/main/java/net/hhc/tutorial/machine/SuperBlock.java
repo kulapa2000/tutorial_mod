@@ -1,9 +1,6 @@
 package net.hhc.tutorial.machine;
 
 import com.mojang.logging.LogUtils;
-import net.hhc.tutorial.TutorialMod;
-import net.hhc.tutorial.block.ModBlocks;
-import net.hhc.tutorial.block.custom.CobaltBlasterBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -11,7 +8,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
@@ -27,6 +23,8 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 
 public class SuperBlock extends Block implements EntityBlock {
@@ -49,31 +47,31 @@ public class SuperBlock extends Block implements EntityBlock {
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit)
     {
-
         if(!pLevel.isClientSide()&&pPlayer.getMainHandItem().getItem().equals(Items.STICK)&&!pState.getValue(SuperBlock.IS_ASSEMBLED))
         {
             LOGGER.info("check1 pass" );
             if(pLevel.getBlockEntity(pPos) instanceof SuperBlockEntity superBlockEntity)
             {
                 LOGGER.info("check2 pass");
-                BlockPos firstBlockPos = superBlockEntity.childPositions.get(0);
-                BlockPos secondBlockPos = superBlockEntity.childPositions.get(1);
-
-                if(pLevel.getBlockState(firstBlockPos).getBlock().getClass() == PartBlock.class && pLevel.getBlockState(secondBlockPos).getBlock().getClass()== PartBlock.class )
+                if(ifMatch(pPos,pLevel))
                 {
                     LOGGER.info("should assemble");
-                    if(!pLevel.getBlockState(pPos).getValue(IS_ASSEMBLED))
-                    {
-                        LOGGER.info("super block setting called");
-                        superBlockEntity.addSuperBlockPosMap(firstBlockPos,pPos);
-                        superBlockEntity.addSuperBlockPosMap(secondBlockPos,pPos);
-                        LOGGER.info("pos added ");
 
-                        pLevel.setBlock(pPos,superBlockEntity.getBlockState().setValue(SuperBlock.IS_ASSEMBLED,true),2);
 
-                        pLevel.setBlock(firstBlockPos,pLevel.getBlockState(firstBlockPos).setValue(PartBlock.IS_ASSEMBLED,true),2);
-                        pLevel.setBlock(secondBlockPos,pLevel.getBlockState(secondBlockPos).setValue(PartBlock.IS_ASSEMBLED,true),2);
-                    }
+                        for (Map.Entry<BlockPos, String> entry : SuperBlockEntity.checkPosMap.entrySet())
+                        {
+                            BlockPos keyPos = entry.getKey();
+                            int x = keyPos.getX();
+                            int y = keyPos.getY();
+                            int z = keyPos.getZ();
+                            x += pPos.getX();
+                            y += pPos.getY();
+                            z += pPos.getZ();
+                            BlockPos realPos = new BlockPos(x, y, z);
+                            superBlockEntity.addSuperBlockPosMap(realPos,pPos);
+                            pLevel.setBlock(realPos,pLevel.getBlockState(realPos).setValue(PartBlock.IS_ASSEMBLED,true),3);
+                        }
+                        pLevel.setBlock(pPos,superBlockEntity.getBlockState().setValue(SuperBlock.IS_ASSEMBLED,true),3);
                 }
 
             }
@@ -113,6 +111,28 @@ public class SuperBlock extends Block implements EntityBlock {
     }
 
 
-
+    public boolean ifMatch(BlockPos superBlockPos,Level level)
+    {
+        boolean isMatch = true;
+        for (Map.Entry<BlockPos, String> entry : SuperBlockEntity.checkPosMap.entrySet())
+        {
+            BlockPos keyPos = entry.getKey();
+            String valueType = entry.getValue();
+            int x = keyPos.getX();
+            int y = keyPos.getY();
+            int z = keyPos.getZ();
+            x += superBlockPos.getX();
+            y += superBlockPos.getY();
+            z += superBlockPos.getZ();
+            BlockPos realPos = new BlockPos(x, y, z);
+            LOGGER.info(" valueType:" + valueType+"block class name:"+ level.getBlockState(realPos).getBlock().getClass().getName());
+            if (!level.getBlockState(realPos).getBlock().getClass().getName().equals(valueType))
+            {
+                isMatch = false;
+                break;
+            }
+        }
+        return isMatch;
+    }
 }
 

@@ -67,7 +67,6 @@ public class PartBlock extends Block {
             return RenderShape.INVISIBLE;
         }
         return RenderShape.MODEL;
-
     }
 
 

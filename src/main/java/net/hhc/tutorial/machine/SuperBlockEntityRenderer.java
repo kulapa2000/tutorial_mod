@@ -45,7 +45,7 @@ public class SuperBlockEntityRenderer implements BlockEntityRenderer<SuperBlockE
         if(blockState.getBlock() instanceof SuperBlock)
         {
 
-            if(blockState.getValue(SuperBlock.IS_ASSEMBLED)==true)
+            if(blockState.getValue(SuperBlock.IS_ASSEMBLED))
             {
                 pPoseStack.pushPose();
                 pPoseStack.scale(1, 3.5f, 1);
@@ -56,7 +56,7 @@ public class SuperBlockEntityRenderer implements BlockEntityRenderer<SuperBlockE
                 pPoseStack.popPose();
 
             }
-            if(blockState.getValue(SuperBlock.IS_ASSEMBLED)==false)
+            if(!blockState.getValue(SuperBlock.IS_ASSEMBLED))
             {
                 blockRenderer.getModelRenderer().renderModel(
                         pPoseStack.last(),pBufferSource.getBuffer(RenderType.solid()),
