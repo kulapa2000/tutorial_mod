@@ -88,8 +88,10 @@ public class PartBlock extends Block {
     public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
 
         LOGGER.info("part block ondestroy called");
-        if( !level.isClientSide() &&!level.getBlockState(pos).isAir())
+        if( !level.isClientSide() &&!level.getBlockState(pos).isAir()&&level.getBlockState(pos).getValue(PartBlock.IS_ASSEMBLED))
         {
+            LOGGER.info("part block ondestroy check1");
+
             BlockPos superBlockPos=SuperBlockEntity.superBlockPosMap.get(pos);
             level.setBlock(superBlockPos,level.getBlockState(superBlockPos).setValue(SuperBlock.IS_ASSEMBLED,false),2);
             LOGGER.info("super block state should change");
