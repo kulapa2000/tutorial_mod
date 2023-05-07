@@ -4,8 +4,7 @@ import com.mojang.logging.LogUtils;
 import net.hhc.tutorial.block.ModBlocks;
 import net.hhc.tutorial.block.entity.ModBlockEntities;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.*;
 
 import net.minecraft.world.level.block.entity.BlockEntity;
 
@@ -53,8 +52,25 @@ public class SuperBlockEntity extends BlockEntity {
     @Override
     protected void saveAdditional(CompoundTag nbt)
     {
+        LOGGER.info("block entity save additional called");
+        ListTag list = new ListTag();
+        for (Map.Entry<BlockPos, BlockPos> entry : superBlockPosMap.entrySet()) {
+            BlockPos key = entry.getKey();   //part block pos
+            BlockPos value = entry.getValue(); //super block pos
+            ListTag elementListTag = new ListTag();
+            elementListTag.add(DoubleTag.valueOf(key.asLong()));
+            elementListTag.add(DoubleTag.valueOf(value.asLong()));
+            list.add(elementListTag);
+        }
+        nbt.put("superBlockPosMap",list);
+
+        LOGGER.info("list tag size:  "+list.size()+" type:  "+list.getType());
 
         super.saveAdditional(nbt);
+
+        ListTag checklist= nbt.getList("superBlockPosMap", Tag.TAG_LIST);
+        LOGGER.info("nbt save check,size:  "+ checklist.size());
+
     }
 
 
@@ -63,7 +79,15 @@ public class SuperBlockEntity extends BlockEntity {
     public void load(CompoundTag nbt)
     {
         super.load(nbt);
-
+        ListTag list = nbt.getList("superBlockPosMap", Tag.TAG_LIST);
+        LOGGER.info("read from list size:  "+list.size());
+        for (int i = 0; i < list.size(); i++) {
+            ListTag elementListTag = list.getList(i);
+            Double keyLong = elementListTag.getDouble(0);
+            Double valueLong = elementListTag.getDouble(1);
+            superBlockPosMap.put(BlockPos.of(Math.round(keyLong) ), BlockPos.of(Math.round(valueLong)));
+        }
+        LOGGER.info("hashmap reload check,size:  "+superBlockPosMap.size());
 
     }
 
