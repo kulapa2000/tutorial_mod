@@ -2,6 +2,7 @@ package net.hhc.tutorial.machine;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.logging.LogUtils;
+import com.mojang.math.Vector3f;
 import net.hhc.tutorial.TutorialMod;
 import net.hhc.tutorial.multiblock.DynamicModel;
 import net.minecraft.client.Minecraft;
@@ -11,9 +12,8 @@ import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.ForgeModelBakery;
 import net.minecraftforge.client.model.data.EmptyModelData;
@@ -25,6 +25,9 @@ public class SuperBlockEntityRenderer implements BlockEntityRenderer<SuperBlockE
     public static final String NAME = "test_block";
     public static DynamicModel MULTIBLOCK= new DynamicModel(NAME);
     public static DynamicModel COBALT_BLOCK= new DynamicModel("cobalt_block");
+
+    public static DynamicModel ROTATEMODEL= new DynamicModel("rotate");
+
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
@@ -39,6 +42,8 @@ public class SuperBlockEntityRenderer implements BlockEntityRenderer<SuperBlockE
         net.minecraft.client.resources.model.BakedModel origin_model = COBALT_BLOCK.get();
         final BlockRenderDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
 
+        BakedModel rotate_model=ROTATEMODEL.get();
+
         BlockPos blockPos=pBlockEntity.getBlockPos();
         BlockState blockState = pBlockEntity.getLevel().getBlockState(blockPos);
 
@@ -47,11 +52,24 @@ public class SuperBlockEntityRenderer implements BlockEntityRenderer<SuperBlockE
 
             if(blockState.getValue(SuperBlock.IS_ASSEMBLED))
             {
+                int facing=pBlockEntity.facing_direction;
+
                 pPoseStack.pushPose();
-                pPoseStack.scale(1, 3.5f, 1);
+                pPoseStack.scale(3f, 3.5f, 3f);
+
+
+                switch (facing)
+                {
+                    case 1: pPoseStack.mulPose(Vector3f.YN.rotationDegrees(-90));break;
+                    case 2: pPoseStack.mulPose(Vector3f.YN.rotationDegrees(0));break;
+                    case 3: pPoseStack.mulPose(Vector3f.YN.rotationDegrees(180));break;
+                    case 4: pPoseStack.mulPose(Vector3f.YN.rotationDegrees(90));break;
+                }
+
+
                 blockRenderer.getModelRenderer().renderModel(
                         pPoseStack.last(),pBufferSource.getBuffer(RenderType.solid()),
-                        blockState,model,1,1,1,
+                        blockState,rotate_model,1,1,1,
                         pPackedLight,pPackedOverlay, EmptyModelData.INSTANCE);
                 pPoseStack.popPose();
 

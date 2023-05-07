@@ -5,7 +5,8 @@
       "y": 1,
       "z": 0
     },
-    "type": "net.hhc.tutorial.machine.PartBlock"
+    "type": "net.hhc.tutorial.machine.PartBlock",
+    "facing": "north"
   },
   {
     "pos": {
@@ -13,14 +14,114 @@
       "y": 2,
       "z": 0
     },
-    "type": "net.hhc.tutorial.machine.PartBlock"
+    "type": "net.hhc.tutorial.machine.PartBlock",
+    "facing": "north"
+  },
+  {
+    "pos": {
+      "x": 0,
+      "y": 0,
+      "z": -1
+    },
+    "type": "net.hhc.tutorial.machine.PartBlock",
+    "facing": "north"
+  },
+
+
+
+
+  {
+    "pos": {
+      "x": 0,
+      "y": 1,
+      "z": 0
+    },
+    "type": "net.hhc.tutorial.machine.PartBlock",
+    "facing": "east"
+  },
+  {
+    "pos": {
+      "x": 0,
+      "y": 2,
+      "z": 0
+    },
+    "type": "net.hhc.tutorial.machine.PartBlock",
+    "facing": "east"
   },
   {
     "pos": {
       "x": 1,
+      "y": 0,
+      "z": 0
+    },
+    "type": "net.hhc.tutorial.machine.PartBlock",
+    "facing": "east"
+  },
+
+
+
+
+
+
+  {
+    "pos": {
+      "x": 0,
+      "y": 1,
+      "z": 0
+    },
+    "type": "net.hhc.tutorial.machine.PartBlock",
+    "facing": "west"
+  },
+  {
+    "pos": {
+      "x": 0,
       "y": 2,
       "z": 0
     },
-    "type": "net.hhc.tutorial.machine.PartBlock"
+    "type": "net.hhc.tutorial.machine.PartBlock",
+    "facing": "west"
+  },
+  {
+    "pos": {
+      "x": -1,
+      "y": 0,
+      "z": 0
+    },
+    "type": "net.hhc.tutorial.machine.PartBlock",
+    "facing": "west"
+  },
+
+
+
+
+
+
+  {
+    "pos": {
+      "x": 0,
+      "y": 1,
+      "z": 0
+    },
+    "type": "net.hhc.tutorial.machine.PartBlock",
+    "facing": "south"
+  },
+  {
+    "pos": {
+      "x": 0,
+      "y": 2,
+      "z": 0
+    },
+    "type": "net.hhc.tutorial.machine.PartBlock",
+    "facing": "south"
+  },
+  {
+    "pos": {
+      "x": 0,
+      "y": 0,
+      "z": 1
+    },
+    "type": "net.hhc.tutorial.machine.PartBlock",
+    "facing": "south"
   }
+
 ]

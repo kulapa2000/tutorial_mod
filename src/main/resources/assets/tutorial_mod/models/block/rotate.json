@@ -1,0 +1,33 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "tutorial_mod:item/sbzdy",
+		"particle": "tutorial_mod:item/sbzdy"
+	},
+	"elements": [
+		{
+			"from": [7, 0, 10],
+			"to": [12, 15, 15],
+			"faces": {
+				"north": {"uv": [0, 0, 2, 15], "texture": "#0"},
+				"east": {"uv": [9.15508, 0.29947, 11.15508, 15.29947], "texture": "#0"},
+				"south": {"uv": [8.98396, 0.44385, 10.98396, 15.44385], "texture": "#0"},
+				"west": {"uv": [3.72193, 0.51337, 5.72193, 15.51337], "texture": "#0"},
+				"up": {"uv": [0, 0, 2, 2], "texture": "#0"},
+				"down": {"uv": [0, 0, 2, 2], "texture": "#0"}
+			}
+		},
+		{
+			"from": [7, 0, 1],
+			"to": [12, 5, 10],
+			"faces": {
+				"north": {"uv": [0, 0, 2, 2], "texture": "#0"},
+				"east": {"uv": [0, 7.40107, 16, 9.40107], "texture": "#0"},
+				"south": {"uv": [0, 0, 2, 2], "texture": "#0"},
+				"west": {"uv": [0, 7.48663, 16, 9.48663], "texture": "#0"},
+				"up": {"uv": [0, 0, 2, 16], "texture": "#0"},
+				"down": {"uv": [0, 0, 2, 16], "texture": "#0"}
+			}
+		}
+	]
+}

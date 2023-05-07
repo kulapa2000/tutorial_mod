@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import net.hhc.tutorial.TutorialMod;
 import net.hhc.tutorial.block.entity.ModBlockEntities;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.*;
 
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -21,13 +22,18 @@ public class SuperBlockEntity extends BlockEntity {
     static Gson gson=new Gson();
     static InputStreamReader reader = new InputStreamReader(SuperBlockEntity.class.getResourceAsStream("/blueprint/test.json"));
     static JsonParser jsonParser = new JsonParser();
-
     static JsonElement jsonElement = jsonParser.parse(reader);
 
-    public static Map<BlockPos,String> checkPosMap=new HashMap<>();
+    public static Map<BlockPos,String> northMap=new HashMap<>();
+    public static Map<BlockPos,String> westMap=new HashMap<>();
+    public static Map<BlockPos,String> southMap=new HashMap<>();
+    public static Map<BlockPos,String> eastMap=new HashMap<>();
+
+    public int facing_direction=0;
 
     public  void loadBlueprint()
     {
+        LOGGER.info("loadBlueprint called");
         if (jsonElement.isJsonArray())
         {
             jsonArray = jsonElement.getAsJsonArray();
@@ -35,9 +41,16 @@ public class SuperBlockEntity extends BlockEntity {
                 JsonObject jsonObject = element.getAsJsonObject();
                 BlockPos relatieveBlockPos = gson.fromJson(jsonObject.get("pos"), BlockPos.class);
                 String className = jsonObject.get("type").getAsString();
-                checkPosMap.put(relatieveBlockPos, className);
+                String facing=jsonObject.get("facing").getAsString();
+
+                switch (facing)
+                {
+                    case"south":southMap.put(relatieveBlockPos,className); break;
+                    case"west":westMap.put(relatieveBlockPos,className);   break;
+                    case"east":eastMap.put(relatieveBlockPos,className);break;
+                    case"north":northMap.put(relatieveBlockPos,className);break;
+                }
             }
-            LOGGER.info("blue print load called,size:  " + checkPosMap.size());
         }
 
     }
@@ -46,7 +59,7 @@ public class SuperBlockEntity extends BlockEntity {
 
     public static Map<BlockPos,BlockPos> superBlockPosMap=new HashMap<>();  //key: Partblock, value:  Superblock
 
-    public void addSuperBlockPosMap(BlockPos partBlockPos,BlockPos superBlockPos)
+    public static void addSuperBlockPosMap(BlockPos partBlockPos,BlockPos superBlockPos)
     {
         superBlockPosMap.put(partBlockPos,superBlockPos);
     }
@@ -59,6 +72,7 @@ public class SuperBlockEntity extends BlockEntity {
     public SuperBlockEntity( BlockPos pPos, BlockState pBlockState)
     {
         super(ModBlockEntities.SUPER_BLOCK.get(), pPos, pBlockState);
+        this.facing_direction=0;
     }
 
 
@@ -81,6 +95,7 @@ public class SuperBlockEntity extends BlockEntity {
 
         }
         nbt.put("superBlockPosMap",list);
+        nbt.putInt("facing",facing_direction);
 
         nbt.putInt("holder",1);
 
@@ -104,7 +119,7 @@ public class SuperBlockEntity extends BlockEntity {
             superBlockPosMap.put(BlockPos.of(Math.round(keyLong)),BlockPos.of(Math.round(valueLong)));
         }
         loadBlueprint();
-        LOGGER.info("load check, size:" +  checkPosMap.size());
+        this.facing_direction=nbt.getInt("facing");
 
         LOGGER.info("hashmap reload check,size:  "+superBlockPosMap.size());
     }
