@@ -132,7 +132,7 @@ public class SuperBlock extends Block implements EntityBlock {
     @Override
     public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
 
-        if(!level.isClientSide())
+        if(!level.isClientSide()&&level.getBlockState(pos).getValue(SuperBlock.IS_ASSEMBLED))
         {
             List<BlockPos> allPartBlocks=SuperBlockEntity.getAllPartBlock(SuperBlockEntity.superBlockPosMap,pos);
             level.setBlock(pos,state.setValue(SuperBlock.IS_ASSEMBLED,false),3);

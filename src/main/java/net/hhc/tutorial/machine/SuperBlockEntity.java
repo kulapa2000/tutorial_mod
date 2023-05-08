@@ -10,6 +10,8 @@ import net.minecraft.nbt.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
+import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.slf4j.Logger;
 import java.io.InputStreamReader;
@@ -31,7 +33,7 @@ public class SuperBlockEntity extends BlockEntity {
 
     public int facing_direction=0;
 
-    public  void loadBlueprint()
+    public static void loadBlueprint()
     {
         LOGGER.info("loadBlueprint called");
         if (jsonElement.isJsonArray())
@@ -118,7 +120,6 @@ public class SuperBlockEntity extends BlockEntity {
             Double valueLong = elementListTag.getDouble(1);
             superBlockPosMap.put(BlockPos.of(Math.round(keyLong)),BlockPos.of(Math.round(valueLong)));
         }
-        loadBlueprint();
         this.facing_direction=nbt.getInt("facing");
 
         LOGGER.info("hashmap reload check,size:  "+superBlockPosMap.size());
@@ -132,6 +133,13 @@ public class SuperBlockEntity extends BlockEntity {
             }
         }
         return keys;
+    }
+
+    @SubscribeEvent
+    public static void onWorldLoad(WorldEvent.Load event)
+    {
+        LOGGER.info("onworldload called");
+        SuperBlockEntity.loadBlueprint();
     }
 
 }
