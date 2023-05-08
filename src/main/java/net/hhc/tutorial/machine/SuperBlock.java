@@ -59,12 +59,15 @@ public class SuperBlock extends Block implements EntityBlock {
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit)
     {
 
-        LOGGER.info("southmap size:  "+ SuperBlockEntity.southMap.size());
-        LOGGER.info("westmap size:  "+ SuperBlockEntity.westMap.size());
-        LOGGER.info("eastmap size:  "+ SuperBlockEntity.eastMap.size());
-        LOGGER.info("northmap size:  "+ SuperBlockEntity.northMap.size());
-        LOGGER.info("this facing :"+((SuperBlockEntity) pLevel.getBlockEntity(pPos)).facing_direction);
+        if(!pLevel.isClientSide)
+        {
 
+            LOGGER.info("southmap size:  "+ SuperBlockEntity.southMap.size());
+            LOGGER.info("westmap size:  "+ SuperBlockEntity.westMap.size());
+            LOGGER.info("eastmap size:  "+ SuperBlockEntity.eastMap.size());
+            LOGGER.info("northmap size:  "+ SuperBlockEntity.northMap.size());
+            LOGGER.info("this facing :"+((SuperBlockEntity) pLevel.getBlockEntity(pPos)).getFacingDirection());
+        }
 
         if(!pLevel.isClientSide()&&pPlayer.getMainHandItem().getItem().equals(Items.STICK)&&!pState.getValue(SuperBlock.IS_ASSEMBLED))
         {
@@ -83,31 +86,32 @@ public class SuperBlock extends Block implements EntityBlock {
                         {
                             LOGGER.info("should assemble");
                             assemble(pLevel,pPos,SuperBlockEntity.eastMap);
-                            superBlockEntity.facing_direction=1;
+                            superBlockEntity.setFacingDirection(1);
+                            break;
                         }
                     case 2:
                         if(ifMatch(pPos,pLevel,SuperBlockEntity.northMap))
                         {
                             LOGGER.info("should assemble");
                             assemble(pLevel,pPos,SuperBlockEntity.northMap);
-                            superBlockEntity.facing_direction=2;
-
+                            superBlockEntity.setFacingDirection(2);
+                            break;
                         }
                     case 3:
                         if(ifMatch(pPos,pLevel,SuperBlockEntity.southMap))
                         {
                             LOGGER.info("should assemble");
                             assemble(pLevel,pPos,SuperBlockEntity.southMap);
-                            superBlockEntity.facing_direction=3;
-
+                            superBlockEntity.setFacingDirection(3);
+                            break;
                         }
                     case 4:
                         if(ifMatch(pPos,pLevel,SuperBlockEntity.westMap))
                         {
                             LOGGER.info("should assemble");
                             assemble(pLevel,pPos,SuperBlockEntity.westMap);
-                            superBlockEntity.facing_direction=4;
-
+                            superBlockEntity.setFacingDirection(4);
+                            break;
                         }
                 }
             }

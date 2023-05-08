@@ -28,7 +28,6 @@ public class SuperBlockEntityRenderer implements BlockEntityRenderer<SuperBlockE
 
     public static DynamicModel ROTATEMODEL= new DynamicModel("rotate");
 
-
     private static final Logger LOGGER = LogUtils.getLogger();
 
 
@@ -38,13 +37,13 @@ public class SuperBlockEntityRenderer implements BlockEntityRenderer<SuperBlockE
     public void render(SuperBlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay)
     {
 
-        net.minecraft.client.resources.model.BakedModel model = MULTIBLOCK.get();
-        net.minecraft.client.resources.model.BakedModel origin_model = COBALT_BLOCK.get();
+        BakedModel origin_model = COBALT_BLOCK.get();
         final BlockRenderDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
 
         BakedModel rotate_model=ROTATEMODEL.get();
 
         BlockPos blockPos=pBlockEntity.getBlockPos();
+
         BlockState blockState = pBlockEntity.getLevel().getBlockState(blockPos);
 
         if(blockState.getBlock() instanceof SuperBlock)
@@ -52,18 +51,28 @@ public class SuperBlockEntityRenderer implements BlockEntityRenderer<SuperBlockE
 
             if(blockState.getValue(SuperBlock.IS_ASSEMBLED))
             {
-                int facing=pBlockEntity.facing_direction;
+
+                int facing=pBlockEntity.getFacingDirection();
 
                 pPoseStack.pushPose();
                 pPoseStack.scale(3f, 3.5f, 3f);
 
-
                 switch (facing)
                 {
-                    case 1: pPoseStack.mulPose(Vector3f.YN.rotationDegrees(-90));break;
-                    case 2: pPoseStack.mulPose(Vector3f.YN.rotationDegrees(0));break;
-                    case 3: pPoseStack.mulPose(Vector3f.YN.rotationDegrees(180));break;
-                    case 4: pPoseStack.mulPose(Vector3f.YN.rotationDegrees(90));break;
+                    case 1:
+                            pPoseStack.mulPose(Vector3f.YN.rotationDegrees(-90));
+                            break;
+
+                    case 2:
+                        pPoseStack.mulPose(Vector3f.YN.rotationDegrees(0));
+
+                            break;
+                    case 3:
+                        pPoseStack.mulPose(Vector3f.YN.rotationDegrees(180));
+                            break;
+                    case 4:
+                        pPoseStack.mulPose(Vector3f.YN.rotationDegrees(90));
+                            break;
                 }
 
 

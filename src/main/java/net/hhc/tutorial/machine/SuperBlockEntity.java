@@ -7,12 +7,16 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.*;
 
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import java.io.InputStreamReader;
 import java.util.*;
@@ -31,7 +35,15 @@ public class SuperBlockEntity extends BlockEntity {
     public static Map<BlockPos,String> southMap=new HashMap<>();
     public static Map<BlockPos,String> eastMap=new HashMap<>();
 
-    public int facing_direction=0;
+    private  int facing_direction;
+
+    public  void setFacingDirection(int direction) {
+        this.facing_direction = direction;
+    }
+
+    public  int getFacingDirection() {
+        return this.facing_direction;
+    }
 
     public static void loadBlueprint()
     {
@@ -142,4 +154,17 @@ public class SuperBlockEntity extends BlockEntity {
         SuperBlockEntity.loadBlueprint();
     }
 
+    @Nullable
+    @Override
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    @Override
+    public CompoundTag getUpdateTag() {
+        CompoundTag compoundTag=saveWithoutMetadata();
+        load(compoundTag);
+
+        return compoundTag;
+    }
 }
