@@ -2,6 +2,7 @@ package net.hhc.tutorial.machine;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.logging.LogUtils;
+import com.mojang.math.Vector3d;
 import com.mojang.math.Vector3f;
 import net.hhc.tutorial.multiblock.DynamicModel;
 import net.minecraft.client.Minecraft;
@@ -23,7 +24,7 @@ public class SuperBlockEntityRenderer implements BlockEntityRenderer<SuperBlockE
     public static DynamicModel MULTIBLOCK= new DynamicModel(NAME);
     public static DynamicModel COBALT_BLOCK= new DynamicModel("cobalt_block");
 
-    public static DynamicModel ROTATEMODEL= new DynamicModel("rotate");
+    public static DynamicModel ROTATEMODEL= new DynamicModel("rotate2");
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
@@ -52,23 +53,25 @@ public class SuperBlockEntityRenderer implements BlockEntityRenderer<SuperBlockE
                 int facing=pBlockEntity.getFacingDirection();
 
                 pPoseStack.pushPose();
-                pPoseStack.scale(3f, 3.5f, 3f);
+                pPoseStack.translate(0.5,0,0.5);
 
                 switch (facing)
                 {
                     case 1:
-                        pPoseStack.mulPose(Vector3f.YN.rotationDegrees(-90));
-                        break;
-                    case 2:
                         pPoseStack.mulPose(Vector3f.YN.rotationDegrees(0));
                         break;
+                    case 2:
+                        pPoseStack.mulPose(Vector3f.YN.rotationDegrees(-90));
+                        break;
                     case 3:
-                        pPoseStack.mulPose(Vector3f.YN.rotationDegrees(180));
+                        pPoseStack.mulPose(Vector3f.YN.rotationDegrees(-180));
                         break;
                     case 4:
-                        pPoseStack.mulPose(Vector3f.YN.rotationDegrees(90));
+                        pPoseStack.mulPose(Vector3f.YN.rotationDegrees(-270));
                         break;
                 }
+
+                pPoseStack.translate(-0.5,0,-0.5);
 
 
                 blockRenderer.getModelRenderer().renderModel(

@@ -22,6 +22,6 @@ public class ClientModEvents {
        DynamicModel TESTMODEL= new DynamicModel("test_block");
         DynamicModel MULTIBLOCK= new DynamicModel("test_block");
         DynamicModel COBALT_BLOCK= new DynamicModel("cobalt_block");
-        DynamicModel ROTATEMODEL=new DynamicModel("rotate");
+        DynamicModel ROTATEMODEL=new DynamicModel("rotate2");
     }
 }
