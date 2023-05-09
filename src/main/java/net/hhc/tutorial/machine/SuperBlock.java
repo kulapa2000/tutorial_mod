@@ -58,10 +58,8 @@ public class SuperBlock extends Block implements EntityBlock {
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit)
     {
-
         if(!pLevel.isClientSide)
         {
-
             LOGGER.info("southmap size:  "+ SuperBlockEntity.southMap.size());
             LOGGER.info("westmap size:  "+ SuperBlockEntity.westMap.size());
             LOGGER.info("eastmap size:  "+ SuperBlockEntity.eastMap.size());
@@ -76,49 +74,39 @@ public class SuperBlock extends Block implements EntityBlock {
             {
                 LOGGER.info("check2 pass");
 
-                int facing=getMultiBlockFacing(pLevel,PartBlock.class,pPos,1);
-
-                LOGGER.info("facing:  " +facing);
-                switch (facing)
+                if(ifMatch(pPos,pLevel,SuperBlockEntity.northMap))
                 {
-                    case 1:
-                        if(ifMatch(pPos,pLevel,SuperBlockEntity.eastMap))
-                        {
-                            LOGGER.info("should assemble");
-                            assemble(pLevel,pPos,SuperBlockEntity.eastMap);
-                            superBlockEntity.setFacingDirection(1);
-                            break;
-                        }
-                    case 2:
-                        if(ifMatch(pPos,pLevel,SuperBlockEntity.northMap))
-                        {
-                            LOGGER.info("should assemble");
-                            assemble(pLevel,pPos,SuperBlockEntity.northMap);
-                            superBlockEntity.setFacingDirection(2);
-                            break;
-                        }
-                    case 3:
-                        if(ifMatch(pPos,pLevel,SuperBlockEntity.southMap))
-                        {
-                            LOGGER.info("should assemble");
-                            assemble(pLevel,pPos,SuperBlockEntity.southMap);
-                            superBlockEntity.setFacingDirection(3);
-                            break;
-                        }
-                    case 4:
-                        if(ifMatch(pPos,pLevel,SuperBlockEntity.westMap))
-                        {
-                            LOGGER.info("should assemble");
-                            assemble(pLevel,pPos,SuperBlockEntity.westMap);
-                            superBlockEntity.setFacingDirection(4);
-                            break;
-                        }
+                    LOGGER.info("should assemble");
+                    assemble(pLevel,pPos,SuperBlockEntity.northMap);
+                    superBlockEntity.setFacingDirection(1);
+
+                }
+                if(ifMatch(pPos,pLevel,SuperBlockEntity.westMap))
+                {
+                    LOGGER.info("should assemble");
+                    assemble(pLevel,pPos,SuperBlockEntity.westMap);
+                    superBlockEntity.setFacingDirection(2);
+
+                }
+                if(ifMatch(pPos,pLevel,SuperBlockEntity.southMap))
+                {
+                    LOGGER.info("should assemble");
+                    assemble(pLevel,pPos,SuperBlockEntity.southMap);
+                    superBlockEntity.setFacingDirection(3);
+                }
+                if(ifMatch(pPos,pLevel,SuperBlockEntity.eastMap))
+                {
+                    LOGGER.info("should assemble");
+                    assemble(pLevel,pPos,SuperBlockEntity.eastMap);
+                    superBlockEntity.setFacingDirection(4);
+
                 }
             }
             return InteractionResult.SUCCESS;
         }
        return super.use(pState,pLevel,pPos,pPlayer,pHand,pHit);
-    }
+}
+
 
     @Override
     public RenderShape getRenderShape(BlockState pState)
@@ -151,14 +139,15 @@ public class SuperBlock extends Block implements EntityBlock {
     }
 
 
-    public boolean ifMatch(BlockPos superBlockPos,Level level,Map<BlockPos,String> map)
+    public boolean ifMatch(BlockPos superBlockPos,Level level,Map<BlockPos, SuperBlockEntity.BlockRequirement<String,Integer>> map)
     {
         LOGGER.info("match called");
         boolean isMatch = true;
-        for (Map.Entry<BlockPos, String> entry : map.entrySet())
+        for (Map.Entry<BlockPos,  SuperBlockEntity.BlockRequirement<String,Integer>> entry : map.entrySet())
         {
             BlockPos keyPos = entry.getKey();
-            String valueType = entry.getValue();
+            String valueType = entry.getValue().getType();
+            int state=entry.getValue().getRequiredState();
             int x = keyPos.getX();
             int y = keyPos.getY();
             int z = keyPos.getZ();
@@ -172,30 +161,24 @@ public class SuperBlock extends Block implements EntityBlock {
                 isMatch = false;
                 break;
             }
+
+            switch (state)
+            {
+                case -1: break;
+                case 0: if(level.getBlockState(realPos).getValue(FACING)==Direction.NORTH){break;}
+                case 1: if(level.getBlockState(realPos).getValue(FACING)==Direction.WEST){break;}
+                case 2:if(level.getBlockState(realPos).getValue(FACING)==Direction.SOUTH){break;}
+                case 3:if(level.getBlockState(realPos).getValue(FACING)==Direction.EAST){break;}
+            }
+
         }
         return isMatch;
     }
 
-    public int getMultiBlockFacing(Level level,Class<?> referenceBlockClass,BlockPos superBlockPos,int horizontalOffset) {
 
-        if (level.getBlockState(superBlockPos.east(horizontalOffset)).getBlock().getClass() == referenceBlockClass) {
-            return 1;   //east
-        }
-        if (level.getBlockState(superBlockPos.north(horizontalOffset)).getBlock().getClass() == referenceBlockClass)  {
-            return 2;  //north
-        }
-        if (level.getBlockState(superBlockPos.south(horizontalOffset)).getBlock().getClass() == referenceBlockClass) {
-            return 3;  //south
-        }
-        if (level.getBlockState(superBlockPos.west(horizontalOffset)).getBlock().getClass() == referenceBlockClass)  {
-            return 4;   //west
-        }
-        return 0;
-    }
-
-    public void assemble(Level level,BlockPos superBlockPos,Map<BlockPos,String> map)
+    public void assemble(Level level,BlockPos superBlockPos,Map<BlockPos,SuperBlockEntity.BlockRequirement<String,Integer>> map)
     {
-        for (Map.Entry<BlockPos, String> entry : map.entrySet())
+        for (Map.Entry<BlockPos, SuperBlockEntity.BlockRequirement<String,Integer>> entry : map.entrySet())
         {
             BlockPos keyPos = entry.getKey();
             int x = keyPos.getX();

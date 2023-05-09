@@ -3,19 +3,16 @@ package net.hhc.tutorial.machine;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.logging.LogUtils;
 import com.mojang.math.Vector3f;
-import net.hhc.tutorial.TutorialMod;
 import net.hhc.tutorial.multiblock.DynamicModel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
-import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.ForgeModelBakery;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import org.slf4j.Logger;
 
@@ -60,19 +57,17 @@ public class SuperBlockEntityRenderer implements BlockEntityRenderer<SuperBlockE
                 switch (facing)
                 {
                     case 1:
-                            pPoseStack.mulPose(Vector3f.YN.rotationDegrees(-90));
-                            break;
-
+                        pPoseStack.mulPose(Vector3f.YN.rotationDegrees(-90));
+                        break;
                     case 2:
                         pPoseStack.mulPose(Vector3f.YN.rotationDegrees(0));
-
-                            break;
+                        break;
                     case 3:
                         pPoseStack.mulPose(Vector3f.YN.rotationDegrees(180));
-                            break;
+                        break;
                     case 4:
                         pPoseStack.mulPose(Vector3f.YN.rotationDegrees(90));
-                            break;
+                        break;
                 }
 
 

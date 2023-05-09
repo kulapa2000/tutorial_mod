@@ -3,6 +3,7 @@ import com.google.gson.*;
 import com.mojang.logging.LogUtils;
 import net.hhc.tutorial.TutorialMod;
 import net.hhc.tutorial.block.entity.ModBlockEntities;
+import net.hhc.tutorial.util.BlueprintUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.*;
@@ -17,6 +18,7 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
+import org.lwjgl.system.CallbackI;
 import org.slf4j.Logger;
 import java.io.InputStreamReader;
 import java.util.*;
@@ -30,10 +32,30 @@ public class SuperBlockEntity extends BlockEntity {
     static JsonParser jsonParser = new JsonParser();
     static JsonElement jsonElement = jsonParser.parse(reader);
 
-    public static Map<BlockPos,String> northMap=new HashMap<>();
-    public static Map<BlockPos,String> westMap=new HashMap<>();
-    public static Map<BlockPos,String> southMap=new HashMap<>();
-    public static Map<BlockPos,String> eastMap=new HashMap<>();
+     static class BlockRequirement<T,I> {
+        private  T type;
+        private I requiredState;
+        public BlockRequirement( T type,I requiredState) {
+
+            this.type = type;
+            this.requiredState=requiredState;
+        }
+
+        public T getType() {
+            return type;
+        }
+
+        public I getRequiredState() {
+            return requiredState;
+        }
+    }
+
+    public static Map<BlockPos,BlockRequirement<String, Integer>> northMap=new HashMap<>();
+    public static Map<BlockPos,BlockRequirement<String,Integer>> westMap=new HashMap<>();
+    public static Map<BlockPos,BlockRequirement<String,Integer>> southMap=new HashMap<>();
+    public static Map<BlockPos,BlockRequirement<String,Integer>> eastMap=new HashMap<>();
+
+
 
     private  int facing_direction;
 
@@ -55,19 +77,29 @@ public class SuperBlockEntity extends BlockEntity {
                 JsonObject jsonObject = element.getAsJsonObject();
                 BlockPos relatieveBlockPos = gson.fromJson(jsonObject.get("pos"), BlockPos.class);
                 String className = jsonObject.get("type").getAsString();
-                String facing=jsonObject.get("facing").getAsString();
 
-                switch (facing)
+                for (int i=1;i<=4;i++)     //1: north, 2:west, 3:south, 4:east
                 {
-                    case"south":southMap.put(relatieveBlockPos,className); break;
-                    case"west":westMap.put(relatieveBlockPos,className);   break;
-                    case"east":eastMap.put(relatieveBlockPos,className);break;
-                    case"north":northMap.put(relatieveBlockPos,className);break;
+                    BlockPos newPos= BlueprintUtils.rotateCounterClockWise(relatieveBlockPos,i-1);
+                    int state=jsonObject.get("state").getAsInt();
+                    state=(state+1)%4;
+
+                    switch (i)
+                    {
+                        case 1:northMap.put(newPos,new BlockRequirement<>(className,state));break;
+                        case 2:westMap.put(newPos,new BlockRequirement<>(className,state));break;
+                        case 3:southMap.put(newPos,new BlockRequirement<>(className,state));break;
+                        case 4:eastMap.put(newPos,new BlockRequirement<>(className,state));break;
+                    }
+
                 }
             }
         }
 
     }
+
+
+
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
