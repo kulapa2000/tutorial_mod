@@ -1,6 +1,7 @@
 package net.hhc.tutorial.machine;
 
 import com.mojang.logging.LogUtils;
+import net.hhc.tutorial.TutorialMod;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -22,13 +23,15 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
 
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 import java.util.List;
 import java.util.Map;
 
-
+@Mod.EventBusSubscriber(modid = TutorialMod.MOD_ID,bus= Mod.EventBusSubscriber.Bus.FORGE)
 public class SuperBlock extends Block implements EntityBlock {
 
     private static final Logger LOGGER = LogUtils.getLogger();
@@ -192,6 +195,23 @@ public class SuperBlock extends Block implements EntityBlock {
             level.setBlock(realPos,level.getBlockState(realPos).setValue(PartBlock.IS_ASSEMBLED,true),3);
         }
         level.setBlock(superBlockPos,level.getBlockState(superBlockPos).setValue(SuperBlock.IS_ASSEMBLED,true),3);
+    }
+
+    @SubscribeEvent
+    public static void onBreakEvent(BreakEvent event)
+    {
+        LOGGER.info("breakevent received");
+        BlockPos superBlockPos=SuperBlockEntity.superBlockPosMap.get(event.getBlockPos());
+        event.getLevel().setBlock(superBlockPos,event.getLevel().getBlockState(superBlockPos).setValue(SuperBlock.IS_ASSEMBLED,false),2);
+        List<BlockPos> allPartBlocks=SuperBlockEntity.getAllPartBlock(SuperBlockEntity.superBlockPosMap,superBlockPos);
+        for (int i=0;i<allPartBlocks.size();i++)
+        {
+            event.getLevel().setBlock(allPartBlocks.get(i),event.getLevel().getBlockState(allPartBlocks.get(i)).setValue(PartBlock.IS_ASSEMBLED,false),2);
+            SuperBlockEntity.superBlockPosMap.remove(allPartBlocks.get(i));
+        }
+        event.getLevel().setBlock(event.getBlockPos(),event.getLevel().getBlockState(event.getBlockPos()).setValue(PartBlock.IS_ASSEMBLED,false),2);
+        SuperBlockEntity.superBlockPosMap.remove(event.getBlockPos());
+
     }
 }
 

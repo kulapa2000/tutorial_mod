@@ -14,7 +14,7 @@ public class BreakEvent extends Event {
 
     public BreakEvent(Level level, BlockPos blockPos) {
         this.level = level;
-        this.blockPos = new BlockPos(blockPos);
+        this.blockPos = blockPos;
     }
 
     public Level getLevel() {

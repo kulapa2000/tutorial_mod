@@ -91,25 +91,11 @@ public class PartBlock extends Block {
         {
             if(level.getBlockState(pos).getValue(PartBlock.IS_ASSEMBLED))
             {
-                LOGGER.info("part block ondestroy check1");
+                MinecraftForge.EVENT_BUS.post(new BreakEvent(level,pos));
 
-                BlockPos superBlockPos=SuperBlockEntity.superBlockPosMap.get(pos);
-                level.setBlock(superBlockPos,level.getBlockState(superBlockPos).setValue(SuperBlock.IS_ASSEMBLED,false),2);
-                LOGGER.info("super block state should change");
-
-                List<BlockPos> allPartBlocks=SuperBlockEntity.getAllPartBlock(SuperBlockEntity.superBlockPosMap,superBlockPos);
-                for (int i=0;i<allPartBlocks.size();i++)
-                {
-                    level.setBlock(allPartBlocks.get(i),level.getBlockState(allPartBlocks.get(i)).setValue(PartBlock.IS_ASSEMBLED,false),2);
-                    SuperBlockEntity.superBlockPosMap.remove(allPartBlocks.get(i));
-                }
-
-                level.setBlock(pos,level.getBlockState(pos).setValue(PartBlock.IS_ASSEMBLED,false),2);
-                SuperBlockEntity.superBlockPosMap.remove(pos);
+                LOGGER.info("breakevent posted");
             }
-
         }
-
         return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
     }
 
