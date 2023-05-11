@@ -2,8 +2,10 @@ package net.hhc.tutorial.machine;
 
 import com.mojang.logging.LogUtils;
 import net.hhc.tutorial.TutorialMod;
+import net.hhc.tutorial.block.entity.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -11,10 +13,12 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 
+import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
@@ -25,6 +29,7 @@ import net.minecraft.world.phys.BlockHitResult;
 
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
@@ -32,7 +37,7 @@ import java.util.List;
 import java.util.Map;
 
 @Mod.EventBusSubscriber(modid = TutorialMod.MOD_ID,bus= Mod.EventBusSubscriber.Bus.FORGE)
-public class SuperBlock extends Block implements EntityBlock {
+public class SuperBlock extends BaseEntityBlock {
 
     private static final Logger LOGGER = LogUtils.getLogger();
     public SuperBlock(Properties pProperties)
@@ -61,13 +66,9 @@ public class SuperBlock extends Block implements EntityBlock {
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit)
     {
-        if(!pLevel.isClientSide)
+        if(!pLevel.isClientSide&&pState.getValue(SuperBlock.IS_ASSEMBLED))
         {
-            LOGGER.info("southmap size:  "+ SuperBlockEntity.southMap.size());
-            LOGGER.info("westmap size:  "+ SuperBlockEntity.westMap.size());
-            LOGGER.info("eastmap size:  "+ SuperBlockEntity.eastMap.size());
-            LOGGER.info("northmap size:  "+ SuperBlockEntity.northMap.size());
-            LOGGER.info("this facing :"+((SuperBlockEntity) pLevel.getBlockEntity(pPos)).getFacingDirection());
+            NetworkHooks.openGui((ServerPlayer) pPlayer, ((SuperBlockEntity) pLevel.getBlockEntity(pPos)),pPos);
         }
 
         if(!pLevel.isClientSide()&&pPlayer.getMainHandItem().getItem().equals(Items.STICK)&&!pState.getValue(SuperBlock.IS_ASSEMBLED))
@@ -129,6 +130,7 @@ public class SuperBlock extends Block implements EntityBlock {
 
         if(!level.isClientSide()&&level.getBlockState(pos).getValue(SuperBlock.IS_ASSEMBLED))
         {
+            ((SuperBlockEntity) level.getBlockEntity(pos)).drops(pos);
             List<BlockPos> allPartBlocks=SuperBlockEntity.getAllPartBlock(SuperBlockEntity.superBlockPosMap,pos);
             level.setBlock(pos,state.setValue(SuperBlock.IS_ASSEMBLED,false),3);
             for (int i=0;i<allPartBlocks.size();i++)
@@ -202,6 +204,7 @@ public class SuperBlock extends Block implements EntityBlock {
     {
         LOGGER.info("breakevent received");
         BlockPos superBlockPos=SuperBlockEntity.superBlockPosMap.get(event.getBlockPos());
+        ((SuperBlockEntity) event.getLevel().getBlockEntity(superBlockPos)).drops(event.getBlockPos());
         event.getLevel().setBlock(superBlockPos,event.getLevel().getBlockState(superBlockPos).setValue(SuperBlock.IS_ASSEMBLED,false),2);
         List<BlockPos> allPartBlocks=SuperBlockEntity.getAllPartBlock(SuperBlockEntity.superBlockPosMap,superBlockPos);
         for (int i=0;i<allPartBlocks.size();i++)
@@ -211,7 +214,11 @@ public class SuperBlock extends Block implements EntityBlock {
         }
         event.getLevel().setBlock(event.getBlockPos(),event.getLevel().getBlockState(event.getBlockPos()).setValue(PartBlock.IS_ASSEMBLED,false),2);
         SuperBlockEntity.superBlockPosMap.remove(event.getBlockPos());
+    }
 
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
+        return createTickerHelper(pBlockEntityType, ModBlockEntities.SUPER_BLOCK.get(),SuperBlockEntity::tick);
     }
 }
 

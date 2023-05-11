@@ -13,6 +13,8 @@ import net.hhc.tutorial.multiblock.*;
 import net.hhc.tutorial.recipe.ModRecipes;
 import net.hhc.tutorial.screen.CobaltBlasterScreen;
 import net.hhc.tutorial.screen.ModMenuTypes;
+import net.hhc.tutorial.screen.SuperBlockEntityMenu;
+import net.hhc.tutorial.screen.SuperBlockEntityScreen;
 import net.hhc.tutorial.sound.ModSounds;
 import net.hhc.tutorial.util.ModItemProperties;
 import net.minecraft.client.Minecraft;
@@ -102,6 +104,9 @@ public class TutorialMod
         ItemBlockRenderTypes.setRenderLayer(ModFluids.HONEY_FLOWING.get(), RenderType.translucent());
 
         MenuScreens.register(ModMenuTypes.COBALT_BLASTER_MENU.get(), CobaltBlasterScreen::new);
+
+        MenuScreens.register(ModMenuTypes.SUPERBLOCK_MENU.get(),SuperBlockEntityScreen::new);
+
         ModItemProperties.addCustomItemProperties();
 
     }

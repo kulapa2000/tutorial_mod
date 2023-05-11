@@ -2,21 +2,43 @@ package net.hhc.tutorial.machine;
 import com.google.gson.*;
 import com.mojang.logging.LogUtils;
 import net.hhc.tutorial.TutorialMod;
+import net.hhc.tutorial.block.entity.CobaltBlasterBlockEntity;
 import net.hhc.tutorial.block.entity.ModBlockEntities;
+import net.hhc.tutorial.item.ModItems;
+import net.hhc.tutorial.screen.SuperBlockEntityMenu;
 import net.hhc.tutorial.util.BlueprintUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.*;
 
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.Containers;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.system.CallbackI;
 import org.slf4j.Logger;
@@ -24,7 +46,7 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 @Mod.EventBusSubscriber(modid = TutorialMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-public class SuperBlockEntity extends BlockEntity {
+public class SuperBlockEntity extends BlockEntity implements MenuProvider {
 
     static JsonArray jsonArray=new JsonArray();
     static Gson gson=new Gson();
@@ -32,7 +54,63 @@ public class SuperBlockEntity extends BlockEntity {
     static JsonParser jsonParser = new JsonParser();
     static JsonElement jsonElement = jsonParser.parse(reader);
 
-     static class BlockRequirement<T,I> {
+    protected final ContainerData data;
+
+    private final ItemStackHandler inventory=new ItemStackHandler(4)
+    {
+        @Override
+        protected void onContentsChanged(int slot) {
+            setChanged();
+        }
+    };
+
+    private LazyOptional<IItemHandler> lazyItemHandler=LazyOptional.empty();
+
+
+    @NotNull
+    @Override
+    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+        if(cap== CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+        {
+            return lazyItemHandler.cast();
+        }
+        return super.getCapability(cap, side);
+    }
+
+    @Override
+    public Component getDisplayName() {
+        return new TextComponent("superblock");
+    }
+
+    @Nullable
+    @Override
+    public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
+        return new SuperBlockEntityMenu(pContainerId,pInventory,this,this.data);
+    }
+
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        lazyItemHandler=LazyOptional.of(()->inventory);
+    }
+
+    @Override
+    public void invalidateCaps() {
+        super.invalidateCaps();
+        lazyItemHandler.invalidate();
+    }
+
+
+    public void drops(BlockPos blockPos) {
+        SimpleContainer container = new SimpleContainer(this.inventory.getSlots());
+        for (int i = 0; i < this.inventory.getSlots(); i++) {
+            container.setItem(i, this.inventory.getStackInSlot(i));
+        }
+
+        Containers.dropContents(this.level, blockPos, container);
+    }
+
+    static class BlockRequirement<T,I> {
         private  T type;
         private I requiredState;
         public BlockRequirement( T type,I requiredState) {
@@ -115,10 +193,45 @@ public class SuperBlockEntity extends BlockEntity {
         superBlockPosMap.remove(partBlockPos);
     }
 
+    private int progress=0;
+    private int maxProgress=72;
+    private int fuelTime=0;
+    private int maxFuelTime=0;
+
     public SuperBlockEntity( BlockPos pPos, BlockState pBlockState)
     {
         super(ModBlockEntities.SUPER_BLOCK.get(), pPos, pBlockState);
         this.facing_direction=0;
+
+        this.data=new ContainerData()
+        {
+            public int get(int index)
+            {
+                switch (index)
+                {
+                    case 0: return SuperBlockEntity.this.progress;
+                    case 1: return SuperBlockEntity.this.maxProgress;
+                    case 2: return SuperBlockEntity.this.fuelTime;
+                    case 3: return SuperBlockEntity.this.maxFuelTime;
+                    default: return 0;
+                }
+            }
+
+            public void set(int index, int value)
+            {
+                switch(index)
+                {
+                    case 0: SuperBlockEntity.this.progress = value; break;
+                    case 1: SuperBlockEntity.this.maxProgress = value; break;
+                    case 2: SuperBlockEntity.this.fuelTime = value; break;
+                    case 3: SuperBlockEntity.this.maxFuelTime = value; break;
+                }
+            }
+
+            public int getCount() {
+                return 4;
+            }
+        };
     }
 
 
@@ -144,6 +257,7 @@ public class SuperBlockEntity extends BlockEntity {
         nbt.putInt("facing",facing_direction);
 
         nbt.putInt("holder",1);
+        nbt.put("inventory",inventory.serializeNBT());
 
 
         super.saveAdditional(nbt);
@@ -165,6 +279,7 @@ public class SuperBlockEntity extends BlockEntity {
             superBlockPosMap.put(BlockPos.of(Math.round(keyLong)),BlockPos.of(Math.round(valueLong)));
         }
         this.facing_direction=nbt.getInt("facing");
+        inventory.deserializeNBT(nbt.getCompound("inventory"));
 
         LOGGER.info("hashmap reload check,size:  "+superBlockPosMap.size());
     }
@@ -198,5 +313,40 @@ public class SuperBlockEntity extends BlockEntity {
         load(compoundTag);
 
         return compoundTag;
+    }
+
+    public static void tick(Level pLevel, BlockPos pPos, BlockState pState, SuperBlockEntity superBlockEntity)
+    {
+        if(hasRecipe(superBlockEntity)&&!reachStackLimit(superBlockEntity))
+        {
+            processItem(superBlockEntity);
+        }
+
+    }
+
+    private static void  processItem(SuperBlockEntity superBlockEntity)
+    {
+        superBlockEntity.inventory.extractItem(0,1,false);
+        superBlockEntity.inventory.setStackInSlot(1, new ItemStack(ModItems.COBALT_INGOT.get(),superBlockEntity.inventory.getStackInSlot(1).getCount()+1));
+        superBlockEntity.inventory.setStackInSlot(2, new ItemStack(ModItems.COAL_SILVER.get(),superBlockEntity.inventory.getStackInSlot(2).getCount()+1));
+
+    }
+
+    private static boolean hasRecipe(SuperBlockEntity superBlockEntity)
+    {
+        if(superBlockEntity.inventory.getStackInSlot(0).getItem()== Items.GUNPOWDER)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean reachStackLimit(SuperBlockEntity superBlockEntity)
+    {
+        if(superBlockEntity.inventory.getStackInSlot(1).getCount()<superBlockEntity.inventory.getStackInSlot(1).getMaxStackSize()&&superBlockEntity.inventory.getStackInSlot(2).getCount()<superBlockEntity.inventory.getStackInSlot(2).getMaxStackSize())
+        {
+            return false;
+        }
+        return true;
     }
 }

@@ -17,6 +17,10 @@ public class ModMenuTypes {
     public static final RegistryObject<MenuType<CobaltBlasterMenu>> COBALT_BLASTER_MENU =
             registerMenuType(CobaltBlasterMenu::new, "cobalt_blaster_menu");
 
+    public static final RegistryObject<MenuType<SuperBlockEntityMenu>> SUPERBLOCK_MENU =
+            registerMenuType(SuperBlockEntityMenu::new, "superblock_menu");
+
+
 
     private static <T extends AbstractContainerMenu> RegistryObject<MenuType<T>> registerMenuType(IContainerFactory<T> factory,String name) {
         return MENUS.register(name, () -> IForgeMenuType.create(factory));
