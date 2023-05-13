@@ -151,14 +151,22 @@ public class SuperBlockEntity extends BlockEntity implements MenuProvider {
         if (jsonElement.isJsonArray())
         {
             jsonArray = jsonElement.getAsJsonArray();
+            LOGGER.info("json array size:  "+jsonArray.size() );
             for (JsonElement element : jsonArray) {
                 JsonObject jsonObject = element.getAsJsonObject();
-                BlockPos relatieveBlockPos = gson.fromJson(jsonObject.get("pos"), BlockPos.class);
+
+                int x=jsonObject.get("pos").getAsJsonObject().get("x").getAsInt();
+                int y=jsonObject.get("pos").getAsJsonObject().get("y").getAsInt();
+                int z=jsonObject.get("pos").getAsJsonObject().get("z").getAsInt();
+
+                BlockPos relativeBlockPos = new BlockPos(x,y,z);
+
                 String className = jsonObject.get("type").getAsString();
+                LOGGER.info("relative BlockPos:  "+ relativeBlockPos + "class name:  "+className);
 
                 for (int i=1;i<=4;i++)     //1: north, 2:west, 3:south, 4:east
                 {
-                    BlockPos newPos= BlueprintUtils.rotateCounterClockWise(relatieveBlockPos,i-1);
+                    BlockPos newPos= BlueprintUtils.rotateCounterClockWise(relativeBlockPos,i-1);
                     int state=jsonObject.get("state").getAsInt();
                     state=(state+1)%4;
 
@@ -172,6 +180,11 @@ public class SuperBlockEntity extends BlockEntity implements MenuProvider {
 
                 }
             }
+
+            LOGGER.info(" north map size: " +northMap.size() );
+            LOGGER.info(" west map size: " +westMap.size() );
+            LOGGER.info(" south map size: " +southMap.size() );
+            LOGGER.info(" east map size: " +eastMap.size() );
         }
 
     }

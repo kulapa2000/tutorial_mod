@@ -160,7 +160,7 @@ public class SuperBlock extends BaseEntityBlock {
             y += superBlockPos.getY();
             z += superBlockPos.getZ();
             BlockPos realPos = new BlockPos(x, y, z);
-            LOGGER.info(" valueType:" + valueType+"block class name:"+ level.getBlockState(realPos).getBlock().getClass().getName());
+            LOGGER.info(" valueType:" + valueType+"block class name:"+ level.getBlockState(realPos).getBlock().getClass().getName()+ " real pos: "+realPos);
             if (!level.getBlockState(realPos).getBlock().getClass().getName().equals(valueType))
             {
                 isMatch = false;
