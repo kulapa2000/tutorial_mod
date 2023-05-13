@@ -22,13 +22,13 @@ public class SuperBlockEntityMenu extends AbstractContainerMenu {
     private final ContainerData data;
 
     protected SuperBlockEntityMenu(int windowId, Inventory inv, FriendlyByteBuf extraData) {
-        this(windowId, inv, inv.player.level.getBlockEntity(extraData.readBlockPos()),new SimpleContainerData(4));
+        this(windowId, inv, inv.player.level.getBlockEntity(extraData.readBlockPos()),new SimpleContainerData(2));
     }
 
     public SuperBlockEntityMenu(int windowId, Inventory inv, BlockEntity entity, ContainerData data)
     {
         super(ModMenuTypes.SUPERBLOCK_MENU.get(),windowId);
-        checkContainerSize(inv, 4);
+        checkContainerSize(inv, 3);
         superBlockEntity = ((SuperBlockEntity) entity);
         this.level = inv.player.level;
         this.data=data;
@@ -37,10 +37,9 @@ public class SuperBlockEntityMenu extends AbstractContainerMenu {
         addPlayerHotbar(inv);
 
         this.superBlockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(handler -> {
-            this.addSlot(new ModFuelSlot(handler, 3, 18, 50));
-            this.addSlot(new SlotItemHandler(handler, 0, 66, 16));
-            this.addSlot(new ModResultSlot(handler, 1, 114, 33));
-            this.addSlot(new ModResultSlot(handler, 2, 114, 66));
+            this.addSlot(new SlotItemHandler(handler, 0, 70, 30));
+            this.addSlot(new ModResultSlot(handler, 1, 120, 14));
+            this.addSlot(new ModResultSlot(handler, 2, 120, 50));
 
         });
 
@@ -62,7 +61,7 @@ public class SuperBlockEntityMenu extends AbstractContainerMenu {
     private static final int TE_INVENTORY_FIRST_SLOT_INDEX = VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT;
 
     // THIS YOU HAVE TO DEFINE!
-    private static final int TE_INVENTORY_SLOT_COUNT = 4;  // must be the number of slots you have!
+    private static final int TE_INVENTORY_SLOT_COUNT = 3;  // must be the number of slots you have!
 
     @Override
     public ItemStack quickMoveStack(Player playerIn, int index) {
@@ -127,16 +126,9 @@ public class SuperBlockEntityMenu extends AbstractContainerMenu {
     public int getScaledProgress() {
         int progress = this.data.get(0);
         int maxProgress = this.data.get(1);  // Max Progress
-        int progressArrowSize = 26; // This is the width in pixels of your arrow
+        int progressArrowSize = 30; // This is the width in pixels of your arrow
 
         return maxProgress != 0 && progress != 0 ? progress * progressArrowSize / maxProgress : 0;
     }
 
-    public int getScaledFuelProgress() {
-        int fuelProgress = this.data.get(2);
-        int maxFuelProgress = this.data.get(3);
-        int fuelProgressSize = 14;
-
-        return maxFuelProgress != 0 ? (int)(((float)fuelProgress / (float)maxFuelProgress) * fuelProgressSize) : 0;
-    }
 }

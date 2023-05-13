@@ -12,7 +12,7 @@ import net.minecraft.world.entity.player.Inventory;
 public class SuperBlockEntityScreen extends AbstractContainerScreen<SuperBlockEntityMenu> {
 
     private static final ResourceLocation TEXTURE =
-            new ResourceLocation(TutorialMod.MOD_ID, "textures/gui/cobalt_blaster_gui.png");
+            new ResourceLocation(TutorialMod.MOD_ID, "textures/gui/super_block_gui.png");
 
     public SuperBlockEntityScreen(SuperBlockEntityMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -34,12 +34,7 @@ public class SuperBlockEntityScreen extends AbstractContainerScreen<SuperBlockEn
         this.blit(pPoseStack, x, y, 0, 0, imageWidth, imageHeight);
 
         if(menu.isCrafting()) {
-            blit(pPoseStack, x + 84, y + 22, 176, 14, menu.getScaledProgress(), 36);
-        }
-
-        if(menu.hasFuel()) {
-            blit(pPoseStack, x + 18, y + 33 + 14 - menu.getScaledFuelProgress(), 176,
-                    14 - menu.getScaledFuelProgress(), 14, menu.getScaledFuelProgress());
+            this.blit(pPoseStack, x + 92, y + 15, 179, 1, menu.getScaledProgress(), 45);
         }
     }
 

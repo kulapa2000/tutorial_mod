@@ -66,7 +66,7 @@ public class SuperBlock extends BaseEntityBlock {
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit)
     {
-        if(!pLevel.isClientSide&&pState.getValue(SuperBlock.IS_ASSEMBLED))
+        if(!pLevel.isClientSide&&pState.getValue(SuperBlock.IS_ASSEMBLED)&&!pPlayer.getMainHandItem().getItem().equals(Items.STICK))
         {
             NetworkHooks.openGui((ServerPlayer) pPlayer, ((SuperBlockEntity) pLevel.getBlockEntity(pPos)),pPos);
         }

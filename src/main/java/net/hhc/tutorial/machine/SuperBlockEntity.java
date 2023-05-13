@@ -196,7 +196,7 @@ public class SuperBlockEntity extends BlockEntity implements MenuProvider {
     private int progress=0;
     private int maxProgress=72;
     private int fuelTime=0;
-    private int maxFuelTime=0;
+    private int maxFuelTime=100;
 
     public SuperBlockEntity( BlockPos pPos, BlockState pBlockState)
     {
@@ -211,8 +211,6 @@ public class SuperBlockEntity extends BlockEntity implements MenuProvider {
                 {
                     case 0: return SuperBlockEntity.this.progress;
                     case 1: return SuperBlockEntity.this.maxProgress;
-                    case 2: return SuperBlockEntity.this.fuelTime;
-                    case 3: return SuperBlockEntity.this.maxFuelTime;
                     default: return 0;
                 }
             }
@@ -223,13 +221,11 @@ public class SuperBlockEntity extends BlockEntity implements MenuProvider {
                 {
                     case 0: SuperBlockEntity.this.progress = value; break;
                     case 1: SuperBlockEntity.this.maxProgress = value; break;
-                    case 2: SuperBlockEntity.this.fuelTime = value; break;
-                    case 3: SuperBlockEntity.this.maxFuelTime = value; break;
                 }
             }
 
             public int getCount() {
-                return 4;
+                return 2;
             }
         };
     }
@@ -258,8 +254,7 @@ public class SuperBlockEntity extends BlockEntity implements MenuProvider {
 
         nbt.putInt("holder",1);
         nbt.put("inventory",inventory.serializeNBT());
-
-
+        nbt.putInt("superblock.progress",this.progress);
         super.saveAdditional(nbt);
 
         ListTag checklist= nbt.getList("superBlockPosMap", Tag.TAG_LIST);
@@ -280,6 +275,7 @@ public class SuperBlockEntity extends BlockEntity implements MenuProvider {
         }
         this.facing_direction=nbt.getInt("facing");
         inventory.deserializeNBT(nbt.getCompound("inventory"));
+        this.progress=nbt.getInt("superblock.progress");
 
         LOGGER.info("hashmap reload check,size:  "+superBlockPosMap.size());
     }
@@ -319,7 +315,16 @@ public class SuperBlockEntity extends BlockEntity implements MenuProvider {
     {
         if(hasRecipe(superBlockEntity)&&!reachStackLimit(superBlockEntity))
         {
-            processItem(superBlockEntity);
+            superBlockEntity.progress++;
+            if(superBlockEntity.progress>=superBlockEntity.maxProgress)
+            {
+                processItem(superBlockEntity);
+                superBlockEntity.progress=0;
+            }
+        }
+        else
+        {
+            superBlockEntity.progress=0;
         }
 
     }
