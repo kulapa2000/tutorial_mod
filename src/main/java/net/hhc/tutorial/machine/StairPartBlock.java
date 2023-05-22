@@ -6,6 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
@@ -13,11 +14,16 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.*;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.MinecraftForge;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 public class StairPartBlock extends StairBlock {
 
@@ -73,6 +79,34 @@ public class StairPartBlock extends StairBlock {
             }
         }
         return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
+    }
+
+    private static final VoxelShape SHAPE_N= Stream.of(
+            Block.box(13, 0, 0, 16, 3, 3),
+            Block.box(13, 0, 13, 16, 3, 16),
+            Block.box(0, 0, 13, 3, 3, 16),
+            Block.box(0, 0, 0, 3, 3, 3),
+            Block.box(3, 2, 4, 13, 6, 5),
+            Block.box(2, 0, 1, 14, 2, 14),
+            Block.box(3, 0, 15, 13, 2, 16),
+            Block.box(3, 2, 5, 13, 14, 14),
+            Block.box(3, 0, 14, 13, 7, 15),
+            Block.box(4, 13, 7, 12, 15, 13)
+    ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
+
+
+    @Override
+    public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext)
+    {
+        LOGGER.info("Voxelshape changed");
+        if(pState.getValue(StairPartBlock.IS_ASSEMBLED))
+        {
+            return SHAPE_N;
+        }
+        else
+        {
+            return super.getShape(pState,pLevel,pPos,pContext);
+        }
     }
 
 
