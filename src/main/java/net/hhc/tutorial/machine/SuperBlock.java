@@ -15,12 +15,14 @@ import net.minecraft.world.level.Level;
 
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
@@ -160,20 +162,38 @@ public class SuperBlock extends BaseEntityBlock {
             y += superBlockPos.getY();
             z += superBlockPos.getZ();
             BlockPos realPos = new BlockPos(x, y, z);
-            LOGGER.info(" valueType:" + valueType+"block class name:"+ level.getBlockState(realPos).getBlock().getClass().getName()+ " real pos: "+realPos);
+            LOGGER.info(" valueType:" + valueType+"block class name:"+ level.getBlockState(realPos).getBlock().getClass().getName()+ " real pos: "+realPos +"state:  "+state);
             if (!level.getBlockState(realPos).getBlock().getClass().getName().equals(valueType))
             {
                 isMatch = false;
                 break;
             }
-
             switch (state)
             {
                 case -1: break;
-                case 0: if(level.getBlockState(realPos).getValue(FACING)==Direction.NORTH){break;}
-                case 1: if(level.getBlockState(realPos).getValue(FACING)==Direction.WEST){break;}
-                case 2:if(level.getBlockState(realPos).getValue(FACING)==Direction.SOUTH){break;}
-                case 3:if(level.getBlockState(realPos).getValue(FACING)==Direction.EAST){break;}
+                case 2: if(level.getBlockState(realPos).getValue(BlockStateProperties.HORIZONTAL_FACING)!= Direction.NORTH)
+                {
+                    isMatch=false;
+                }
+                    break;
+                case 3: if(level.getBlockState(realPos).getValue(BlockStateProperties.HORIZONTAL_FACING)!=Direction.WEST)
+                {
+                    isMatch=false;
+                }
+                    break;
+
+                case 0:if(level.getBlockState(realPos).getValue(BlockStateProperties.HORIZONTAL_FACING)!=Direction.SOUTH)
+                {
+                    isMatch=false;
+                }
+                    break;
+
+                case 1:if(level.getBlockState(realPos).getValue(BlockStateProperties.HORIZONTAL_FACING)!=Direction.EAST)
+                {
+                    isMatch=false;
+                }
+                    break;
+
             }
 
         }

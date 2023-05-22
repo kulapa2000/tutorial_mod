@@ -8,6 +8,7 @@ import net.hhc.tutorial.block.custom.TurnipCropBlock;
 import net.hhc.tutorial.item.ModCreativeModeTab;
 import net.hhc.tutorial.item.ModItems;
 import net.hhc.tutorial.machine.PartBlock;
+import net.hhc.tutorial.machine.StairPartBlock;
 import net.hhc.tutorial.machine.SuperBlock;
 import net.hhc.tutorial.sound.ModSounds;
 import net.minecraft.network.chat.Component;
@@ -76,8 +77,6 @@ public class ModBlocks {
     public static final RegistryObject<Block>SPEEDY_BLOCK=registerBlock("speedy_block",
             ()->new SpeedyBlock(BlockBehaviour.Properties.of(Material.STONE).strength(4f).requiresCorrectToolForDrops()),ModCreativeModeTab.CREATIVE_MODE_TAB,"tooltip.block.speedy_block");
 
-    public static final RegistryObject<Block>COBALT_STAIRS=registerBlock("cobalt_stairs",
-            ()->new StairBlock(()->ModBlocks.COBALT_BLOCK.get().defaultBlockState(),BlockBehaviour.Properties.of(Material.METAL).strength(4f).requiresCorrectToolForDrops()),ModCreativeModeTab.CREATIVE_MODE_TAB);
 
 
     public static final RegistryObject<Block>COBALT_SLAB=registerBlock("cobalt_slab",
@@ -111,5 +110,8 @@ public class ModBlocks {
 
     public static final RegistryObject<Block>PART_BLOCK=registerBlock("part_block",
             ()->new PartBlock(BlockBehaviour.Properties.of(Material.METAL).noOcclusion().strength(5f)), ModCreativeModeTab.CREATIVE_MODE_TAB);
+
+    public static final RegistryObject<Block>COBALT_STAIRS=registerBlock("cobalt_stairs",
+            ()->new StairPartBlock(()->ModBlocks.COBALT_BLOCK.get().defaultBlockState(),BlockBehaviour.Properties.of(Material.METAL).noOcclusion().strength(5f)), ModCreativeModeTab.CREATIVE_MODE_TAB);
 
 }
