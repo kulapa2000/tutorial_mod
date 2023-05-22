@@ -164,18 +164,18 @@ public class SuperBlockEntity extends BlockEntity implements MenuProvider {
                 String className = jsonObject.get("type").getAsString();
                 LOGGER.info("relative BlockPos:  "+ relativeBlockPos + "class name:  "+className);
 
-                for (int i=1;i<=4;i++)     //1: north, 2:west, 3:south, 4:east
+                for (int i=0;i<=3;i++)     //0: north, 1:west, 2:south, 3:east
                 {
-                    BlockPos newPos= BlueprintUtils.rotateCounterClockWise(relativeBlockPos,i-1);
+                    BlockPos newPos= BlueprintUtils.rotateCounterClockWise(relativeBlockPos,i);
                     int state=jsonObject.get("state").getAsInt();
-                    state=(state+1)%4;
+                    if(state>=0){state=(state+i)%4;}
 
                     switch (i)
                     {
-                        case 1:northMap.put(newPos,new BlockRequirement<>(className,state));break;
-                        case 2:westMap.put(newPos,new BlockRequirement<>(className,state));break;
-                        case 3:southMap.put(newPos,new BlockRequirement<>(className,state));break;
-                        case 4:eastMap.put(newPos,new BlockRequirement<>(className,state));break;
+                        case 0:northMap.put(newPos,new BlockRequirement<>(className,state));break;
+                        case 1:westMap.put(newPos,new BlockRequirement<>(className,state));break;
+                        case 2:southMap.put(newPos,new BlockRequirement<>(className,state));break;
+                        case 3:eastMap.put(newPos,new BlockRequirement<>(className,state));break;
                     }
 
                 }

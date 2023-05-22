@@ -94,20 +94,4 @@ public class StairPartBlock extends StairBlock {
             Block.box(4, 13, 7, 12, 15, 13)
     ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
 
-
-    @Override
-    public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext)
-    {
-        LOGGER.info("Voxelshape changed");
-        if(pState.getValue(StairPartBlock.IS_ASSEMBLED))
-        {
-            return SHAPE_N;
-        }
-        else
-        {
-            return super.getShape(pState,pLevel,pPos,pContext);
-        }
-    }
-
-
 }

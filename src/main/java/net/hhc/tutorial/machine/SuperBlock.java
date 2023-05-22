@@ -3,6 +3,7 @@ package net.hhc.tutorial.machine;
 import com.mojang.logging.LogUtils;
 import net.hhc.tutorial.TutorialMod;
 import net.hhc.tutorial.block.entity.ModBlockEntities;
+import net.hhc.tutorial.util.BlueprintUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
@@ -35,6 +36,8 @@ import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -80,32 +83,52 @@ public class SuperBlock extends BaseEntityBlock {
             {
                 LOGGER.info("check2 pass");
 
-                if(ifMatch(pPos,pLevel,SuperBlockEntity.northMap))
+                Map<BlockPos,Integer> stateMap=new HashMap<>();
+
+                if(ifMatch(pPos,pLevel,SuperBlockEntity.northMap,stateMap))
                 {
-                    LOGGER.info("should assemble");
-                    assemble(pLevel,pPos,SuperBlockEntity.northMap);
-                    superBlockEntity.setFacingDirection(1);
+                    //LOGGER.info("north checkstatemap size:  " +list.size()+ "required state:  "+list.get(0));
+                    if(ifStateMatch(stateMap,pLevel))
+                    {
+                        LOGGER.info("should assemble");
+                        assemble(pLevel,pPos,SuperBlockEntity.northMap);
+                        superBlockEntity.setFacingDirection(1);
+                    }
+                    stateMap.clear();
+                }
+                if(ifMatch(pPos,pLevel,SuperBlockEntity.westMap,stateMap))
+                {
+
+                    if(ifStateMatch(stateMap,pLevel))
+                    {
+                        LOGGER.info("should assemble");
+                        assemble(pLevel, pPos, SuperBlockEntity.westMap);
+                        superBlockEntity.setFacingDirection(2);
+                    }
+                    stateMap.clear();
+                }
+                if(ifMatch(pPos,pLevel,SuperBlockEntity.southMap,stateMap))
+                {
+
+                    if(ifStateMatch(stateMap,pLevel))
+                    {
+                        LOGGER.info("should assemble");
+                        assemble(pLevel,pPos,SuperBlockEntity.southMap);
+                        superBlockEntity.setFacingDirection(3);
+                    }
+                    stateMap.clear();
 
                 }
-                if(ifMatch(pPos,pLevel,SuperBlockEntity.westMap))
+                if(ifMatch(pPos,pLevel,SuperBlockEntity.eastMap,stateMap))
                 {
-                    LOGGER.info("should assemble");
-                    assemble(pLevel,pPos,SuperBlockEntity.westMap);
-                    superBlockEntity.setFacingDirection(2);
 
-                }
-                if(ifMatch(pPos,pLevel,SuperBlockEntity.southMap))
-                {
-                    LOGGER.info("should assemble");
-                    assemble(pLevel,pPos,SuperBlockEntity.southMap);
-                    superBlockEntity.setFacingDirection(3);
-                }
-                if(ifMatch(pPos,pLevel,SuperBlockEntity.eastMap))
-                {
-                    LOGGER.info("should assemble");
-                    assemble(pLevel,pPos,SuperBlockEntity.eastMap);
-                    superBlockEntity.setFacingDirection(4);
-
+                    if(ifStateMatch(stateMap,pLevel))
+                    {
+                        LOGGER.info("should assemble");
+                        assemble(pLevel, pPos, SuperBlockEntity.eastMap);
+                        superBlockEntity.setFacingDirection(4);
+                    }
+                    stateMap.clear();
                 }
             }
             return InteractionResult.SUCCESS;
@@ -146,7 +169,20 @@ public class SuperBlock extends BaseEntityBlock {
     }
 
 
-    public boolean ifMatch(BlockPos superBlockPos,Level level,Map<BlockPos, SuperBlockEntity.BlockRequirement<String,Integer>> map)
+    public boolean ifStateMatch(Map<BlockPos,Integer> pstateMap,Level level)
+    {
+        for(Map.Entry<BlockPos,Integer> entry: pstateMap.entrySet())
+        {
+          if(level.getBlockState(entry.getKey()).getValue(StairPartBlock.FACING)!= BlueprintUtils.intToDirection(entry.getValue()%4))
+          {
+              LOGGER.info("required state: "+  entry.getValue());
+              return false;
+          }
+        }
+        return true;
+    }
+
+    public boolean ifMatch(BlockPos superBlockPos,Level level,Map<BlockPos, SuperBlockEntity.BlockRequirement<String,Integer>> map,Map<BlockPos,Integer> pstateMap)
     {
         LOGGER.info("match called");
         boolean isMatch = true;
@@ -162,43 +198,22 @@ public class SuperBlock extends BaseEntityBlock {
             y += superBlockPos.getY();
             z += superBlockPos.getZ();
             BlockPos realPos = new BlockPos(x, y, z);
-            LOGGER.info(" valueType:" + valueType+"block class name:"+ level.getBlockState(realPos).getBlock().getClass().getName()+ " real pos: "+realPos +"state:  "+state);
+           // LOGGER.info(" valueType:" + valueType+"block class name:"+ level.getBlockState(realPos).getBlock().getClass().getName()+ " real pos: "+realPos +"state:  "+state);
             if (!level.getBlockState(realPos).getBlock().getClass().getName().equals(valueType))
             {
                 isMatch = false;
                 break;
             }
-            switch (state)
+
+            if(state>=0)
             {
-                case -1: break;
-                case 2: if(level.getBlockState(realPos).getValue(BlockStateProperties.HORIZONTAL_FACING)!= Direction.NORTH)
-                {
-                    isMatch=false;
-                }
-                    break;
-                case 3: if(level.getBlockState(realPos).getValue(BlockStateProperties.HORIZONTAL_FACING)!=Direction.WEST)
-                {
-                    isMatch=false;
-                }
-                    break;
-
-                case 0:if(level.getBlockState(realPos).getValue(BlockStateProperties.HORIZONTAL_FACING)!=Direction.SOUTH)
-                {
-                    isMatch=false;
-                }
-                    break;
-
-                case 1:if(level.getBlockState(realPos).getValue(BlockStateProperties.HORIZONTAL_FACING)!=Direction.EAST)
-                {
-                    isMatch=false;
-                }
-                    break;
-
+                pstateMap.put(realPos,state);
             }
-
         }
         return isMatch;
     }
+
+
 
 
     public void assemble(Level level,BlockPos superBlockPos,Map<BlockPos,SuperBlockEntity.BlockRequirement<String,Integer>> map)
